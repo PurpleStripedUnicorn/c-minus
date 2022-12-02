@@ -1,9 +1,15 @@
 
 #include <iostream>
-#include "incl/hey.h"
+#include "debugger/debugger.h"
+#include "lexer/lexer.h"
 
 int main() {
-    std::cout << "Hello World!" << std::endl;
-    poop();
+    std::string txt = "Hello World!";
+    Lexer lexer(txt);
+    std::vector<Token> tokens;
+    while (!lexer.atEnd())
+        tokens.push_back(lexer.get());
+    Debugger debug;
+    debug.lexer("lexer.debug", tokens);
     return 0;
 }

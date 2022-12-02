@@ -1,6 +1,9 @@
 # Build folder
 build/**
 
+# Debug files
+*.debug
+
 # VS Code
 .vscode
 
