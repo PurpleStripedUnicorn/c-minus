@@ -41,8 +41,8 @@ public:
 private:
 
     /**
-     * The current token being read
-     * @pre The lexer is not at the end of the input text
+     * The current token being read, if the lexer is at the end of the text this
+     * returns a newline character
      * @return The character at the current position
      */
     char cur() const;
@@ -53,10 +53,29 @@ private:
      */
     void next();
 
+    /**
+     * Read in an identifier
+     * @return The identifier that was read as a token
+     * @post position is updated
+     */
+    Token readID();
+
+    /**
+     * Read in a number
+     * @return The number that was read as a token
+     * @post position is updated
+     */
+    Token readNum();
+
     // The text the compiler reads in from a file
     const std::string &txt;
     // Record the current position in the input text
     size_t pos;
+    // Current location of reading (line and column)
+    Loc loc;
+    // Last saved location, which is only updated to the current location at the
+    // start of get()
+    Loc savedLoc;
 
 };
 

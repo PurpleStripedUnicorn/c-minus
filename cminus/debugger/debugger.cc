@@ -21,6 +21,9 @@ const std::unordered_map<TokenType, std::string> tokenTable = {
     { TOK_TIMES, "*" },
     { TOK_DIV, "/" },
     { TOK_MOD, "%" },
+    { TOK_SEMICOL, ";" },
+    { TOK_NUM, "NUM" },
+    { TOK_TYPENAME, "TYPE" },
 };
 
 Debugger::Debugger() {
@@ -42,7 +45,7 @@ const {
         while (line.size() < 8)
             line.push_back(' ');
         line.append(tokenName);
-        while (line.size() < 24)
+        while (line.size() < 16)
             line.push_back(' ');
         line.append(token.content);
         file << line << std::endl;

@@ -11,10 +11,12 @@
 enum TokenType {
     // Types used in compiler
     TOK_END, TOK_ERR,
-    // Identifiers
-    TOK_ID,
+    // Identifiers and typenames
+    TOK_ID, TOK_TYPENAME,
+    // Numbers
+    TOK_NUM,
     // Special characters
-    TOK_COMMA,
+    TOK_COMMA, TOK_SEMICOL,
     TOK_LBRACE, TOK_RBRACE,
     TOK_LCBRACE, TOK_RCBRACE,
     // Comparisons
@@ -27,7 +29,7 @@ enum TokenType {
  * A basic lexer token
  */
 struct Token {
-    Token(TokenType type = TOK_ERR, std::string content = "");
+    Token(TokenType type = TOK_ERR, std::string content = "", Loc loc = Loc());
     TokenType type;
     std::string content;
     Loc loc;
