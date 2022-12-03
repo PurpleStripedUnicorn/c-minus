@@ -1,6 +1,7 @@
 
 #include "debugger.h"
 #include "lexer/token.h"
+#include "parsenode/parsenode.h"
 #include <fstream>
 #include <string>
 #include <unordered_map>
@@ -27,17 +28,27 @@ const std::unordered_map<TokenType, std::string> tokenTable = {
     { TOK_PRINT, "PRINT" },
 };
 
-Debugger::Debugger() {
+const std::unordered_map<NodeType, std::string> nodeTypeTable = {
+    { NODE_ERR, "ERR" },
+    { NODE_EMPTY, "EMPTY" },
+    { NODE_PROGRAM, "PROGRAM" },
+    { NODE_SCOPE, "SCOPE" },
+    { NODE_FUNC, "FUNC" },
+    { NODE_STMT, "STMT" },
+    { NODE_NUM, "NUM" },
+    { NODE_ADD, "+" },
+    { NODE_SUB, "-" },
+    { NODE_MUL, "*" },
+    { NODE_DIV, "/" },
+    { NODE_MOD, "%" },
+    { NODE_PRINT, "PRINT" },
+};
 
-}
+Debugger::Debugger() { }
 
-Debugger::~Debugger() {
+Debugger::~Debugger() { }
 
-}
-
-void Debugger::lexer(std::string filename, const std::vector<Token> &tokens)
-const {
-    std::ofstream file(filename);
+void Debugger::lexer(std::ostream &os, const std::vector<Token> &tokens) const {
     for (const Token &token : tokens) {
         std::string tokenName = "??";
         if (tokenTable.find(token.type) != tokenTable.end())
@@ -49,7 +60,19 @@ const {
         while (line.size() < 16)
             line.push_back(' ');
         line.append(token.content);
-        file << line << std::endl;
+        os << line << std::endl;
     }
-    file.close();
+}
+
+void Debugger::parser(std::ostream &os, const ParseNode *node, size_t depth)
+const {
+    for (size_t i = 0; i < depth; i++)
+        os << "   ";
+    if (nodeTypeTable.find(node->getType()) == nodeTypeTable.end())
+        os << "??";
+    else
+        os << nodeTypeTable.find(node->getType())->second;
+    os << std::endl;
+    for (const ParseNode *child : node->children())
+        parser(os, child, depth + 1);
 }
