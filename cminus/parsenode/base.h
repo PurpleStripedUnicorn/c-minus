@@ -15,7 +15,7 @@ public:
 
     using ParseNode::ParseNode;
     virtual ~ListNode();
-    virtual const std::vector<ParseNode *> &children() const override;
+    virtual std::vector<ParseNode *> children() const override;
 
     // Children of the list
     std::vector<ParseNode *> childNodes;
@@ -32,7 +32,7 @@ public:
 
     using ParseNode::ParseNode;
     virtual ~UnaryNode();
-    virtual const std::vector<ParseNode *> &children() const override;
+    virtual std::vector<ParseNode *> children() const override;
 
     // The child of the node
     ParseNode *child;
@@ -49,7 +49,7 @@ public:
 
     using ParseNode::ParseNode;
     virtual ~BinaryNode();
-    virtual const std::vector<ParseNode *> &children() const override;
+    virtual std::vector<ParseNode *> children() const override;
     
     // The children of the node
     ParseNode *leftChild, *rightChild;
@@ -66,7 +66,7 @@ public:
 
     BasicNode(NodeType type, std::string content, Loc loc = Loc());
     virtual ~BasicNode();
-    virtual const std::vector<ParseNode *> &children() const override;
+    virtual std::vector<ParseNode *> children() const override;
 
     // Content of the node, could be a number, a string, etc.
     std::string content;
@@ -82,7 +82,7 @@ public:
 
     EmptyNode(Loc loc = Loc());
     virtual ~EmptyNode();
-    virtual const std::vector<ParseNode *> &children() const override;
+    virtual std::vector<ParseNode *> children() const override;
 
 };
 

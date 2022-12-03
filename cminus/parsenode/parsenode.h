@@ -57,7 +57,7 @@ public:
      * Get the children of the parse node
      * @return A constant reference to the child nodes
      */
-    virtual const std::vector<ParseNode *> &children() const = 0;
+    virtual std::vector<ParseNode *> children() const = 0;
 
     // Location of the parse node
     Loc loc;

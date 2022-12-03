@@ -1,6 +1,6 @@
 
 #include "lexer/lexer.h"
-#include "parsenode/node.h"
+#include "parsenode/nodes.h"
 #include "parsenode/parsenode.h"
 #include "parser.h"
 #include <iostream>
@@ -55,7 +55,9 @@ ParseNode *Parser::readProgram() {
     Loc loc = getLoc();
     while (!atEnd())
         children.push_back(readFunction());
-    return new ProgramNode(loc, children);
+    ProgramNode *node = new ProgramNode(loc);
+    node->childNodes = children;
+    return node;
 }
 
 ParseNode *Parser::readFunction() {
