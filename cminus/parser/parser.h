@@ -83,7 +83,32 @@ private:
      * Parse a function
      * @return The generated parse (sub)tree
      */
-    ParseNode *readFunction();
+    ParseNode *readFunc();
+
+    /**
+     * Parse a code "statement", which can be both a single "line", or a scope
+     * if '{' is read
+     * @return The generated parse (sub)tree
+     */
+    ParseNode *readStmt();
+
+    /**
+     * Parse a scope
+     * @return The generated parse (sub)tree
+     */
+    ParseNode *readScope();
+
+    /**
+     * Parse a print statement
+     * @return The generated parse (sub)tree
+     */
+    ParseNode *readPrint();
+
+    /**
+     * Prase a single number
+     * @return The generated parse (sub)tree
+     */
+    ParseNode *readNum();
 
     // The lexer component
     Lexer &lexer;

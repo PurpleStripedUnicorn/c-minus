@@ -4,6 +4,7 @@
 
 #include "base.h"
 #include "util/types.h"
+#include <string>
 
 /**
  * Base node of the parse tree
@@ -24,10 +25,12 @@ class FuncNode : public UnaryNode {
 
 public:
 
-    FuncNode(ReturnType returnType, Loc loc = Loc());
+    FuncNode(Loc loc = Loc(), ReturnType returnType = RT_VOID);
 
     // Return type of the function
     ReturnType returnType;
+    // Name of the function
+    std::string name;
 
 };
 

@@ -13,4 +13,10 @@ enum ReturnType {
     RT_UINT8
 };
 
+/**
+ * Convert a string to a return type
+ * @note Throws an error and exits if type is inavlid
+ */
+ReturnType toReturnType(const std::string &txt);
+
 #endif

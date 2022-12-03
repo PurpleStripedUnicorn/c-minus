@@ -22,7 +22,9 @@ enum TokenType {
     // Comparisons
     TOK_EQ,
     // Arithmatic
-    TOK_PLUS, TOK_TIMES, TOK_MINUS, TOK_DIV, TOK_MOD
+    TOK_PLUS, TOK_TIMES, TOK_MINUS, TOK_DIV, TOK_MOD,
+    // Print statement
+    TOK_PRINT,
 };
 
 /**

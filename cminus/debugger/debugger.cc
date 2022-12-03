@@ -24,6 +24,7 @@ const std::unordered_map<TokenType, std::string> tokenTable = {
     { TOK_SEMICOL, ";" },
     { TOK_NUM, "NUM" },
     { TOK_TYPENAME, "TYPE" },
+    { TOK_PRINT, "PRINT" },
 };
 
 Debugger::Debugger() {

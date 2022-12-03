@@ -84,6 +84,8 @@ Token Lexer::readID() {
         ret += cur(), next();
     if (typenames.find(ret) != typenames.end())
         return Token(TOK_TYPENAME, ret, savedLoc);
+    if (ret == "print")
+        return Token(TOK_PRINT, "", savedLoc);
     return Token(TOK_ID, ret, savedLoc);
 }
 
