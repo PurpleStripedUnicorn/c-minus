@@ -28,8 +28,8 @@ std::unordered_set<std::string> typenames = {
     "uint8_t"
 };
 
-Lexer::Lexer(const std::string &txt) : txt(txt), pos(0), loc(1, 1), savedLoc(1,
-1) {
+Lexer::Lexer(const std::string &txt, Debugger &debug) : txt(txt), pos(0),
+loc(1, 1), savedLoc(1, 1), debug(debug) {
 
 }
 
@@ -38,6 +38,16 @@ Lexer::~Lexer() {
 }
 
 Token Lexer::get() {
+    Token tok = getToken();
+    debug.tokens.push_back(tok);
+    return tok;
+}
+
+bool Lexer::atEnd() const {
+    return pos >= txt.size();
+}
+
+Token Lexer::getToken() {
     savedLoc = loc;
     if (atEnd())
         return Token(TOK_END);
@@ -57,10 +67,6 @@ Token Lexer::get() {
     }
     std::cerr << "Lexer error, unrecognized token." << std::endl;
     exit(1);
-}
-
-bool Lexer::atEnd() const {
-    return pos >= txt.size();
 }
 
 char Lexer::cur() const {

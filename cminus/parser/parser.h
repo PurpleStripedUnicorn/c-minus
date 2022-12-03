@@ -2,6 +2,7 @@
 #ifndef FILE_PARSER
 #define FILE_PARSER
 
+#include "debugger/debugger.h"
 #include "lexer/token.h"
 
 class Lexer;
@@ -17,8 +18,9 @@ public:
     /**
      * Constructor
      * @param lexer The lexer component
+     * @param debug The debugger
      */
-    Parser(Lexer &lexer);
+    Parser(Lexer &lexer, Debugger &debug);
 
     /**
      * Destructor
@@ -116,6 +118,8 @@ private:
     Token curToken;
     // Pointer to the generated parse tree
     ParseNode *tree;
+    // The debugger
+    Debugger &debug;
 
 };
 

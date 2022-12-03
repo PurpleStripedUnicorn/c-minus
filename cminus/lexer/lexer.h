@@ -2,6 +2,7 @@
 #ifndef FILE_LEXER
 #define FILE_LEXER
 
+#include "debugger/debugger.h"
 #include "token.h"
 #include <string>
 
@@ -16,8 +17,9 @@ public:
     /**
      * Constructor
      * @param txt The text that needs to be compiled
+     * @param debug The debugger
      */
-    Lexer(const std::string &txt);
+    Lexer(const std::string &txt, Debugger &debug);
 
     /**
      * Destructor
@@ -25,10 +27,9 @@ public:
     ~Lexer();
 
     /**
-     * Read in a token and return it, if we have reached the end of the input
-     * text, a token with type TOK_END will be returned
+     * Read in a token and return it, also informs debugger
      * @return The read token
-     * @post Position in the text is updated
+     * @note The "getToken" function is executed in this function
      */
     Token get();
 
@@ -39,6 +40,14 @@ public:
     bool atEnd() const;
 
 private:
+
+    /**
+     * Read in a token and return it, if we have reached the end of the input
+     * text, a token with type TOK_END will be returned
+     * @return The read token
+     * @post Position in the text is updated
+     */
+    Token getToken();
 
     /**
      * The current token being read, if the lexer is at the end of the text this
@@ -76,6 +85,8 @@ private:
     // Last saved location, which is only updated to the current location at the
     // start of get()
     Loc savedLoc;
+    // The debugger
+    Debugger &debug;
 
 };
 

@@ -7,7 +7,8 @@
 #include <iostream>
 #include <vector>
 
-Parser::Parser(Lexer &lexer) : lexer(lexer), curToken(Token()), tree(nullptr) {
+Parser::Parser(Lexer &lexer, Debugger &debug) : lexer(lexer), curToken(Token()),
+tree(nullptr), debug(debug) {
 
 }
 
@@ -16,7 +17,9 @@ Parser::~Parser() {
 }
 
 void Parser::parse() {
+    next();
     tree = readProgram();
+    debug.tree = tree;
 }
 
 ParseNode *Parser::getTree() const {
@@ -45,7 +48,8 @@ bool Parser::accept(TokenType type) const {
 
 void Parser::expect(TokenType type) const {
     if (!accept(type)) {
-        std::cerr << "Incorrect node type matched at << " << getLoc() << "."
+        std::cerr << "Incorrect token type matched at " << getLoc() << ". "
+        "Expected (" << int(type) << ") got (" << int(cur().type) << ")."
         << std::endl;
         exit(1);
     }
@@ -54,7 +58,6 @@ void Parser::expect(TokenType type) const {
 ParseNode *Parser::readProgram() {
     std::vector<ParseNode *> children;
     ProgramNode *node = new ProgramNode(getLoc());
-    Loc loc = getLoc();
     while (!atEnd())
         children.push_back(readFunc());
     node->childNodes = children;
@@ -68,9 +71,11 @@ ParseNode *Parser::readFunc() {
     next();
     expect(TOK_ID);
     node->name = cur().content;
+    next();
     expect(TOK_LBRACE), next();
     expect(TOK_RBRACE), next();
     node->child = readScope();
+    return node;
 }
 
 ParseNode *Parser::readStmt() {
@@ -95,6 +100,7 @@ ParseNode *Parser::readPrint() {
     PrintNode *node = new PrintNode(getLoc());
     node->child = readNum();
     expect(TOK_RBRACE), next();
+    expect(TOK_SEMICOL), next();
     return node;
 }
 

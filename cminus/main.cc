@@ -5,6 +5,7 @@
 #include <sstream>
 #include "debugger/debugger.h"
 #include "lexer/lexer.h"
+#include "parser/parser.h"
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
@@ -20,11 +21,14 @@ int main(int argc, char *argv[]) {
     std::stringstream stream;
     stream << file.rdbuf();
     std::string txt = stream.str();
-    Lexer lexer(txt);
-    std::vector<Token> tokens;
-    while (!lexer.atEnd())
-        tokens.push_back(lexer.get());
     Debugger debug;
-    debug.lexer("lexer.debug", tokens);
+    debug.enable();
+    Lexer lexer(txt, debug);
+    Parser parser(lexer, debug);
+    parser.parse();
+    // Debug files
+    std::ofstream lexerDebug("lexer.debug"), parserDebug("parser.debug");
+    debug.lexer(lexerDebug);
+    debug.parser(parserDebug);
     return 0;
 }

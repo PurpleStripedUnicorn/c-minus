@@ -1,6 +1,7 @@
 
 #include "loc.h"
 #include <string>
+#include <iostream>
 
 Loc::Loc(size_t line, size_t col) : line(line), col(col) {
 
@@ -15,5 +16,5 @@ std::string Loc::str() const {
 }
 
 std::ostream &operator<<(std::ostream &os, const Loc &loc) {
-    return os << std::string("line ") << loc.line << ':' << loc.col;
+    return os << loc.str();
 }

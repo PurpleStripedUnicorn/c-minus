@@ -2,6 +2,8 @@
 #ifndef FILE_TYPES
 #define FILE_TYPES
 
+#include <string>
+
 /**
  * Return types
  */
