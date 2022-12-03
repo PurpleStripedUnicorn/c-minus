@@ -39,8 +39,9 @@ private:
 
     /**
      * Get the currently read token
+     * @return A constant reference to the current token
      */
-    Token cur() const;
+    const Token &cur() const;
 
     /**
      * Move to the next token
@@ -48,10 +49,29 @@ private:
     void next();
 
     /**
+     * Get the location of the current token being read
+     * @return The location as a Loc object
+     */
+    Loc getLoc() const;
+
+    /**
      * Check if we are reading past the end of the lexer output
      * @return A boolean which indicates if we are reading past the end
      */
     bool atEnd() const;
+
+    /**
+     * Indicates wether the current token has the given type
+     * @param type The type of the token to match
+     * @return A boolean indicating if the current token type is the same
+     */
+    bool accept(TokenType type) const;
+
+    /**
+     * Expect a token of a certain type
+     * @post If the expect type is not matched, the compiler exits
+     */
+    void expect(TokenType type) const;
 
     /**
      * Parse a program

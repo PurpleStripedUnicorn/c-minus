@@ -5,19 +5,30 @@
 #include "util/loc.h"
 #include <vector>
 
+class ParseNode;
+
+/**
+ * The type of a parse node
+ */
 enum NodeType {
     NODE_ERR,
-    // Base nodes
+    // Empty node
+    NODE_EMPTY,
+    // Main program nodes
     NODE_PROGRAM,
     NODE_SCOPE,
     NODE_FUNC,
     NODE_STMT,
+    // Basic nodes
+    NODE_NUM,
     // Arithmatic
-    NODE_ADD, NODE_SUB, NODE_MUL, NODE_DIV, NODE_MOD
+    NODE_ADD, NODE_SUB, NODE_MUL, NODE_DIV, NODE_MOD,
+    // Print statements
+    NODE_PRINT,
 };
 
 /**
- * Abstract base class for parse nodes
+ * Base class for parse nodes
  */
 class ParseNode {
 
@@ -37,6 +48,7 @@ public:
 
     /**
      * Get the type of the parse node
+     * @note The type of a parse node cannot be changed
      * @return The parse node type
      */
     NodeType getType() const;
@@ -45,30 +57,15 @@ public:
      * Get the children of the parse node
      * @return A constant reference to the child nodes
      */
-    const std::vector<ParseNode *> &children() const;
+    virtual const std::vector<ParseNode *> &children() const = 0;
 
-    /**
-     * Get the first child of the parse node
-     * @return The first child in the child list, or nullptr of there are no
-     * children
-     */
-    virtual ParseNode *getLeftChild() const;
+    // Location of the parse node
+    Loc loc;
 
-    /**
-     * Get the second child of the parse node
-     * @return The second child in the child list, or nullptr of there is no
-     * more than one child
-     */
-    virtual ParseNode *getRightChild() const;
-
-private:
+protected:
 
     // Type of the parse node
     NodeType type;
-    // Location of the parse node
-    Loc loc;
-    // Children of the node
-    std::vector<ParseNode *> childNodes;
 
 };
 

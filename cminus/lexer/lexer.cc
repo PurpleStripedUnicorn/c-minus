@@ -21,6 +21,7 @@ std::unordered_map<char, TokenType> smallTokens = {
 };
 
 std::unordered_set<std::string> typenames = {
+    "void",
     "bool",
     "int",
     "unsigned",

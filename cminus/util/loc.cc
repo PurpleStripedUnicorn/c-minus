@@ -13,3 +13,7 @@ std::string Loc::str() const {
         return std::to_string(line);
     return std::to_string(line) + '[' + std::to_string(col) + ']';
 }
+
+std::ostream &operator<<(std::ostream &os, const Loc &loc) {
+    return os << std::string("line ") << loc.line << ':' << loc.col;
+}
