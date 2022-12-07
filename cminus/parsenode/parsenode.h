@@ -6,6 +6,7 @@
 #include <vector>
 
 class ParseNode;
+class ParseTreeVisitor;
 
 /**
  * The type of a parse node
@@ -58,6 +59,11 @@ public:
      * @return A constant reference to the child nodes
      */
     virtual std::vector<ParseNode *> children() const = 0;
+
+    /**
+     * Accept function for parse tree visitors
+     */
+    void accept(ParseTreeVisitor *visitor);
 
     // Location of the parse node
     Loc loc;
