@@ -63,7 +63,7 @@ Token Lexer::getToken() {
         return readNum();
     if (cur() == ' ' || cur() == '\n' || cur() == '\t') {
         next();
-        return get();
+        return getToken();
     }
     std::cerr << "Lexer error, unrecognized token." << std::endl;
     exit(1);
