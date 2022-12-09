@@ -2,7 +2,9 @@
 #include "debugger.h"
 #include "lexer/token.h"
 #include "parsenode/parsenode.h"
+#include "tac/stmt.h"
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -44,7 +46,21 @@ const std::unordered_map<NodeType, std::string> nodeTypeTable = {
     { NODE_PRINT, "PRINT" },
 };
 
-Debugger::Debugger() : enabled(false) { }
+const std::unordered_map<TACType, std::string> tacTypes = {
+    { TAC_ERR, "ERR" },
+    { TAC_EMPTY, "EMPTY" },
+    { TAC_PRINT, "PRINT" },
+    { TAC_ADD, "ADD" },
+    { TAC_SUB, "SUB" },
+    { TAC_MUL, "MUL" },
+    { TAC_DIV, "DIV" },
+    { TAC_MOD, "MOD" },
+    { TAC_MOV, "MOV" },
+    { TAC_ERR, "LABEL" },
+    { TAC_JUMP, "JUMP" },
+};
+
+Debugger::Debugger() : enabled(false), tree(nullptr) { }
 
 Debugger::~Debugger() { }
 
@@ -75,6 +91,37 @@ void Debugger::parser(std::ostream &os) const {
         parser(os, tree, 0);
 }
 
+void Debugger::tac(std::ostream &os) const {
+    if (enabled) {
+        for (const TACStatement &stmt : tacStatements) {
+            std::string name = "??";
+            if (tacTypes.find(stmt.type) != tacTypes.end())
+                name = tacTypes.find(stmt.type)->second;
+            std::string line = stmt.loc.str();
+            while (line.size() < 8)
+                line.push_back(' ');
+            line.append(name);
+            while (line.size() < 16)
+                line.push_back(' ');
+            line.append(tacOperandStr(stmt.dst));
+            while (line.size() < 20)
+                line.push_back(' ');
+            line.append(" = ");
+            line.append(tacOperandStr(stmt.src1));
+            while (line.size() < 26)
+                line.push_back(' ');
+            line.append(" ");
+            if (stmt.src1.type != TACOP_EMPTY) {
+                line.append(", ");
+                while (line.size() < 32)
+                    line.push_back(' ');
+                line.append(tacOperandStr(stmt.src2));
+            }
+            os << line << std::endl;
+        }
+    }
+}
+
 void Debugger::parser(std::ostream &os, const ParseNode *node, size_t depth)
 const {
     for (size_t i = 0; i < depth; i++)
@@ -86,4 +133,18 @@ const {
     os << std::endl;
     for (const ParseNode *child : node->children())
         parser(os, child, depth + 1);
+}
+
+std::string Debugger::tacOperandStr(const TACOperand &op) const {
+    if (op.type == TACOP_EMPTY)
+        return "";
+    if (op.type == TACOP_VAR)
+        return "t" + std::to_string(op.value);
+    if (op.type == TACOP_IMM)
+        return std::to_string(op.value);
+    if (op.type == TACOP_LABEL)
+        return ".L" + std::to_string(op.value);
+    std::cerr << "Cound not convert TAC operand to string" << std::endl;
+    exit(1);
+    return "";
 }

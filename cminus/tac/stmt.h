@@ -2,6 +2,7 @@
 #ifndef FILE_TAC_STMT
 #define FILE_TAC_STMT
 
+#include "util/loc.h"
 #include "util/sizes.h"
 
 /**
@@ -45,13 +46,14 @@ struct TACOperand {
  * operands is the destination and the others are source operands
  */
 struct TACStatement {
-    TACStatement(TACType type = TAC_EMPTY, DataSize size = SIZE_EMPTY,
-    TACOperand dst = TACOperand(), TACOperand src1 = TACOperand(),
-    TACOperand src2 = TACOperand()) : type(type), size(size), dst(dst),
-    src1(src1), src2(src2) { };
+    TACStatement(Loc loc = Loc(), TACType type = TAC_EMPTY,
+    DataSize size = SIZE_EMPTY, TACOperand dst = TACOperand(),
+    TACOperand src1 = TACOperand(), TACOperand src2 = TACOperand()) :
+    type(type), size(size), dst(dst), src1(src1), src2(src2), loc(loc) { };
     TACType type;
     DataSize size;
     TACOperand dst, src1, src2;
+    Loc loc;
 };
 
 #endif

@@ -6,6 +6,8 @@
 #include "stmt.h"
 #include <vector>
 
+class Debugger;
+
 /**
  * Generator for Three-Address Code, which uses the visitor pattern
  */
@@ -15,8 +17,9 @@ public:
 
     /**
      * Constructor
+     * @param debug The debugger
      */
-    TACGenerator();
+    TACGenerator(Debugger &debug);
 
     /**
      * Destructor
@@ -33,8 +36,17 @@ public:
 
 private:
 
+    /**
+     * Add a TAC statement to the generated output
+     * @param stmt The TAC statement
+     * @note This function also ensures the debugger is used
+     */
+    void add(const TACStatement &stmt);
+
     // Generated statements
     std::vector<TACStatement> tac;
+    // The debugger
+    Debugger &debug;
 
 };
 
