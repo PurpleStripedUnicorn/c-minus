@@ -31,10 +31,10 @@ int main(int argc, char *argv[]) {
     debug.enable();
     // Lexer
     Lexer lexer(txt, debug);
-    debug.lexer(lexerDebug);
     // Parser
     Parser parser(lexer, debug);
     parser.parse();
+    debug.lexer(lexerDebug);
     debug.parser(parserDebug);
     // TAC generation
     TACGenerator tac(debug);
