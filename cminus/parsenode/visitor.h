@@ -3,6 +3,12 @@
 #define PARSENODE_VISITOR
 
 class ParseNode;
+class ProgramNode;
+class ScopeNode;
+class EmptyNode;
+class FuncNode;
+class NumberNode;
+
 
 /**
  * Abstract base class for visitors of the parse parse tree
@@ -41,14 +47,12 @@ public:
      * function here
      * @param node The empty node
      */
-    virtual void visitEmpty(ParseNode *node);
+    virtual void visitEmpty(EmptyNode *node);
 
-    virtual void visitProgram(ParseNode *node) = 0;
-    virtual void visitScope(ParseNode *node) = 0;
-    virtual void visitFunc(ParseNode *node) = 0;
-    virtual void visitStmt(ParseNode *node) = 0;
-    virtual void visitBasic(ParseNode *node) = 0;
-    virtual void visitArithmatic(ParseNode *node) = 0;
+    virtual void visitProgram(ProgramNode *node) = 0;
+    virtual void visitScope(ScopeNode *node) = 0;
+    virtual void visitFunc(FuncNode *node) = 0;
+    virtual void visitNumber(NumberNode *node) = 0;
     virtual void visitPrint(ParseNode *node) = 0;
 
 };

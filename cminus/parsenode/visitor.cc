@@ -1,5 +1,7 @@
 
 #include "parsenode.h"
+#include "parsenode/base.h"
+#include "parsenode/nodes.h"
 #include "visitor.h"
 #include <iostream>
 
@@ -12,25 +14,23 @@ void ParseTreeVisitor::visit(ParseNode *node) {
         case NODE_ERR:
             visitErr(node); break;
         case NODE_EMPTY:
-            visitEmpty(node); break;
+            visitEmpty(static_cast<EmptyNode *>(node)); break;
         case NODE_PROGRAM:
-            visitProgram(node); break;
+            visitProgram(static_cast<ProgramNode *>(node)); break;
         case NODE_SCOPE:
-            visitScope(node); break;
+            visitScope(static_cast<ScopeNode *>(node)); break;
         case NODE_FUNC:
-            visitFunc(node); break;
-        case NODE_STMT:
-            visitStmt(node); break;
+            visitFunc(static_cast<FuncNode *>(node)); break;
         case NODE_NUM:
-            visitBasic(node); break;
-        case NODE_ADD:
-        case NODE_SUB:
-        case NODE_MUL:
-        case NODE_DIV:
-        case NODE_MOD:
-            visitArithmatic(node); break;
+            visitNumber(static_cast<NumberNode *>(node)); break;
+        // case NODE_ADD:
+        // case NODE_SUB:
+        // case NODE_MUL:
+        // case NODE_DIV:
+        // case NODE_MOD:
+        //     visitArithmatic(node); break;
         case NODE_PRINT:
-            visitPrint(node); break;
+            visitPrint(static_cast<PrintNode *>(node)); break;
     }
 }
 
@@ -40,4 +40,4 @@ void ParseTreeVisitor::visitErr(ParseNode *node) {
     exit(1);
 }
 
-void ParseTreeVisitor::visitEmpty(ParseNode *node) { }
+void ParseTreeVisitor::visitEmpty(EmptyNode *node) { }
