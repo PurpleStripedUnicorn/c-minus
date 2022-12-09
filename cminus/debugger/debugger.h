@@ -71,6 +71,10 @@ private:
      */
     std::string tacOperandStr(const TACOperand &op) const;
 
+    /**
+     * 
+     */
+
     // Indicates if the debugger is enabled
     bool enabled;
 

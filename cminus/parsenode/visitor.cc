@@ -23,12 +23,6 @@ void ParseTreeVisitor::visit(ParseNode *node) {
             visitFunc(static_cast<FuncNode *>(node)); break;
         case NODE_NUM:
             visitNumber(static_cast<NumberNode *>(node)); break;
-        // case NODE_ADD:
-        // case NODE_SUB:
-        // case NODE_MUL:
-        // case NODE_DIV:
-        // case NODE_MOD:
-        //     visitArithmatic(node); break;
         case NODE_PRINT:
             visitPrint(static_cast<PrintNode *>(node)); break;
     }
@@ -40,4 +34,4 @@ void ParseTreeVisitor::visitErr(ParseNode *node) {
     exit(1);
 }
 
-void ParseTreeVisitor::visitEmpty(EmptyNode *node) { }
+void ParseTreeVisitor::visitEmpty(EmptyNode *node) { (void)node; }

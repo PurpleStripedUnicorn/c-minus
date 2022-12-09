@@ -8,6 +8,7 @@ class ScopeNode;
 class EmptyNode;
 class FuncNode;
 class NumberNode;
+class PrintNode;
 
 
 /**
@@ -53,7 +54,7 @@ public:
     virtual void visitScope(ScopeNode *node) = 0;
     virtual void visitFunc(FuncNode *node) = 0;
     virtual void visitNumber(NumberNode *node) = 0;
-    virtual void visitPrint(ParseNode *node) = 0;
+    virtual void visitPrint(PrintNode *node) = 0;
 
 };
 

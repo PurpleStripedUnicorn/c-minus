@@ -5,39 +5,44 @@
 #include "stmt.h"
 #include "tac.h"
 
-TACGenerator::TACGenerator(Debugger &debug) : debug(debug) { }
+TACGenerator::TACGenerator(Debugger &debug) : debug(debug), tempID(0) { }
 
 TACGenerator::~TACGenerator() { }
 
-void TACGenerator::visitProgram(ParseNode *node) {
-    
+void TACGenerator::visitProgram(ProgramNode *node) {
+    for (ParseNode *child : node->children())
+        child->accept(this);
 }
 
-void TACGenerator::visitScope(ParseNode *node) {
-
+void TACGenerator::visitScope(ScopeNode *node) {
+    // TODO: Add scope functionality
+    for (ParseNode *child : node->children())
+        child->accept(this);
 }
 
-void TACGenerator::visitFunc(ParseNode *node) {
-
+void TACGenerator::visitFunc(FuncNode *node) {
+    // TODO: implement function calls, etc.
+    node->child->accept(this);
 }
 
-void TACGenerator::visitStmt(ParseNode *node) {
-
+void TACGenerator::visitNumber(NumberNode *node) {
+    TACOperand dst(TACOP_VAR, tempID++);
+    TACOperand src(TACOP_IMM, std::stoll(node->content));
+    push(node->loc, TAC_MOV, SIZE_DOUBLE, dst, src);
+    lastTmp = dst;
 }
 
-void TACGenerator::visitBasic(ParseNode *node) {
-
+void TACGenerator::visitPrint(PrintNode *node) {
+    node->child->accept(this);
+    push(node->loc, TAC_PRINT, SIZE_DOUBLE, TACOperand(), lastTmp);
 }
 
-void TACGenerator::visitArithmatic(ParseNode *node) {
-
-}
-
-void TACGenerator::visitPrint(ParseNode *node) {
-
-}
-
-void TACGenerator::add(const TACStatement &stmt) {
+void TACGenerator::push(const TACStatement &stmt) {
     debug.tacStatements.push_back(stmt);
     tac.push_back(stmt);
+}
+
+template<class... T>
+void TACGenerator::push(T... args) {
+    push(TACStatement(args...));
 }

@@ -26,13 +26,11 @@ public:
      */
     ~TACGenerator();
 
-    virtual void visitProgram(ParseNode *node) override;
-    virtual void visitScope(ParseNode *node) override;
-    virtual void visitFunc(ParseNode *node) override;
-    virtual void visitStmt(ParseNode *node) override;
-    virtual void visitBasic(ParseNode *node) override;
-    virtual void visitArithmatic(ParseNode *node) override;
-    virtual void visitPrint(ParseNode *node) override;
+    virtual void visitProgram(ProgramNode *node) override;
+    virtual void visitScope(ScopeNode *node) override;
+    virtual void visitFunc(FuncNode *node) override;
+    virtual void visitNumber(NumberNode *node) override;
+    virtual void visitPrint(PrintNode *node) override;
 
 private:
 
@@ -41,12 +39,17 @@ private:
      * @param stmt The TAC statement
      * @note This function also ensures the debugger is used
      */
-    void add(const TACStatement &stmt);
+    void push(const TACStatement &stmt);
+    template<class... T> void push(T... args);
 
     // Generated statements
     std::vector<TACStatement> tac;
     // The debugger
     Debugger &debug;
+    // Temporary variable counter
+    long long tempID;
+    // Last temporary value that was written to (is a TAC operand)
+    TACOperand lastTmp;
 
 };
 

@@ -60,7 +60,7 @@ const std::unordered_map<TACType, std::string> tacTypes = {
     { TAC_JUMP, "JUMP" },
 };
 
-Debugger::Debugger() : enabled(false), tree(nullptr) { }
+Debugger::Debugger() : tree(nullptr), enabled(false) { }
 
 Debugger::~Debugger() { }
 
@@ -101,22 +101,13 @@ void Debugger::tac(std::ostream &os) const {
             while (line.size() < 8)
                 line.push_back(' ');
             line.append(name);
-            while (line.size() < 16)
+            while (line.size() < 14)
                 line.push_back(' ');
             line.append(tacOperandStr(stmt.dst));
-            while (line.size() < 20)
-                line.push_back(' ');
-            line.append(" = ");
+            line.append(", ");
             line.append(tacOperandStr(stmt.src1));
-            while (line.size() < 26)
-                line.push_back(' ');
-            line.append(" ");
-            if (stmt.src1.type != TACOP_EMPTY) {
-                line.append(", ");
-                while (line.size() < 32)
-                    line.push_back(' ');
-                line.append(tacOperandStr(stmt.src2));
-            }
+            line.append(", ");
+            line.append(tacOperandStr(stmt.src2));
             os << line << std::endl;
         }
     }
