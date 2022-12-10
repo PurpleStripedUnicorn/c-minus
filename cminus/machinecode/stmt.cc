@@ -38,11 +38,13 @@ std::string MCOperand::str(DataSize size) const {
         case MCOP_REG:
             return regToString(reg, size);
         case MCOP_MEM_OFF:
-            return std::to_string(offset) + "(" + regToString(reg, size) + ")";
+            return std::to_string(value) + "(" + regToString(reg, size) + ")";
         case MCOP_MEM_LABEL:
             return label + "(" + regToString(reg, size) + ")";
         case MCOP_LABEL:
             return label;
+        case MCOP_IMM:
+            return std::to_string(value);
     }
 }
 

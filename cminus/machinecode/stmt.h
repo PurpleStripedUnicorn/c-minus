@@ -21,6 +21,8 @@ enum MCOperandType {
     MCOP_MEM_LABEL,
     // .L0
     MCOP_LABEL,
+    // 0
+    MCOP_IMM,
 };
 
 /**
@@ -53,12 +55,13 @@ enum MCType {
 
 /**
  * A machine code operand, which can refer to a memory address, a register, or
- * an immediate. See MCOperandType for more information on formats
+ * an immediate. See MCOperandType for more information on formats. The value
+ * property can be both offset and immediate value, depending on the type
  */
 struct MCOperand {
     MCOperandType type;
     MCRegister reg;
-    long long offset;
+    long long value;
     std::string label;
     std::string str(DataSize size = SIZE_EMPTY) const;
 };
