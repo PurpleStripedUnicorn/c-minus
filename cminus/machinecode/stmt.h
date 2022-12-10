@@ -2,16 +2,25 @@
 #ifndef FILE_MC_STMT
 #define FILE_MC_STMT
 
+#include "reg.h"
+#include "util/sizes.h"
 #include <string>
 
 /**
- * Type of a machine code operand
+ * Type of a machine code operand. Each corresponding format of machine code
+ * operand is written before the enum names
  */
 enum MCOperandType {
-    MCOP_ERR,
-    MCOP_MEM,
+    // Empty and error type operands
+    MCOP_ERR, MCOP_EMPTY,
+    // %rax
     MCOP_REG,
-    MCOP_LABEL
+    // 0(%rax)
+    MCOP_MEM_OFF,
+    // .L0(%rax)
+    MCOP_MEM_LABEL,
+    // .L0
+    MCOP_LABEL,
 };
 
 /**
@@ -20,13 +29,15 @@ enum MCOperandType {
 enum MCType {
     // Special error type
     MC_ERR,
+    // Assembly directive
+    MC_DIREC,
     // Arithmatic
     MC_ADD, MC_SUB, MC_MUL, MC_NEG,
     // Move instruction
     MC_MOVE,
     // Special print instruction
     MC_PRINT,
-    // 
+    // Compare instruction
     MC_COMP,
     // Jumps and branches
     MC_JE, MC_JNE, MC_JL, MC_JLE, MC_JG, MC_JGE,
@@ -42,18 +53,14 @@ enum MCType {
 
 /**
  * A machine code operand, which can refer to a memory address, a register, or
- * an immediate
- * @note The stored "value" here, can refer to a register or an immediate,
- * depending on the operand type. Offset is only used in the case of a memory
- * reference.
- * @note In case of a memory 
+ * an immediate. See MCOperandType for more information on formats
  */
 struct MCOperand {
-    // TODO: improve this to allow all instructions!
     MCOperandType type;
-    long long value, offset;
+    MCRegister reg;
+    long long offset;
     std::string label;
-    std::string str() const;
+    std::string str(DataSize size = SIZE_EMPTY) const;
 };
 
 /**
@@ -64,8 +71,15 @@ struct MCOperand {
  */
 struct MCStatement {
     MCType type;
+    DataSize size;
     MCOperand op1, op2;
+    std::string direcName, direcContent;
     std::string str() const;
 };
+
+/**
+ * Get the string representation of a register
+ */
+std::string regToString(MCRegister reg, DataSize size);
 
 #endif
