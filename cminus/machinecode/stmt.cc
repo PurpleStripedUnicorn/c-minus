@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 
-std::unordered_map<MCType, std::string> mcOpTable = {
+const std::unordered_map<MCType, std::string> mcOpTable = {
     { MC_ADD, "add" },
     { MC_SUB, "sub" },
     { MC_MUL, "mul" },
