@@ -37,8 +37,6 @@ enum MCType {
     MC_ADD, MC_SUB, MC_MUL, MC_NEG,
     // Move instruction
     MC_MOVE,
-    // Special print instruction
-    MC_PRINT,
     // Compare instruction
     MC_COMP,
     // Jumps and branches
@@ -59,6 +57,14 @@ enum MCType {
  * property can be both offset and immediate value, depending on the type
  */
 struct MCOperand {
+    MCOperand(MCOperandType type = MCOP_EMPTY) : type(type) { }
+    MCOperand(MCRegister reg) : type(MCOP_REG), reg(reg) { }
+    MCOperand(long long offset, MCRegister reg) : type(MCOP_MEM_OFF), reg(reg),
+    value(offset) { }
+    MCOperand(std::string label, MCRegister reg) : type(MCOP_MEM_LABEL),
+    reg(reg), label(label) { }
+    MCOperand(std::string label) : type(MCOP_LABEL), label(label) { }
+    MCOperand(long long imm) : type(MCOP_IMM), value(imm) { }
     MCOperandType type;
     MCRegister reg;
     long long value;
@@ -73,6 +79,11 @@ struct MCOperand {
  * not checked
  */
 struct MCStatement {
+    MCStatement(MCType type, DataSize size = SIZE_EMPTY, MCOperand op1 =
+    MCOperand(), MCOperand op2 = MCOperand()) : type(type), size(size),
+    op1(op1), op2(op2) { }
+    MCStatement(std::string direcName, std::string direcContent) :
+    type(MC_DIREC), direcName(direcName), direcContent(direcContent) { }
     MCType type;
     DataSize size;
     MCOperand op1, op2;

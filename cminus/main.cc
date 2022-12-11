@@ -5,6 +5,7 @@
 #include <sstream>
 #include "debugger/debugger.h"
 #include "lexer/lexer.h"
+#include "machinecode/generator.h"
 #include "parsenode/parsenode.h"
 #include "parser/parser.h"
 #include "tac/tac.h"
@@ -40,5 +41,9 @@ int main(int argc, char *argv[]) {
     TACGenerator tac(debug);
     parser.getTree()->accept(&tac);
     debug.tac(tacDebug);
+    // Machine code generation
+    MCGenerator mc(tac.getTAC());
+    mc.generate();
+    mc.write(std::cout);
     return 0;
 }

@@ -26,6 +26,12 @@ public:
      */
     ~TACGenerator();
 
+    /**
+     * Get the generated three-address code (up until this point)
+     * @return A constant reference to the three-address code
+     */
+    const std::vector<TACStatement> &getTAC() const;
+
     virtual void visitProgram(ProgramNode *node) override;
     virtual void visitScope(ScopeNode *node) override;
     virtual void visitFunc(FuncNode *node) override;

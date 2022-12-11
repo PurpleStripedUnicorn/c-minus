@@ -9,6 +9,10 @@ TACGenerator::TACGenerator(Debugger &debug) : debug(debug), tempID(0) { }
 
 TACGenerator::~TACGenerator() { }
 
+const std::vector<TACStatement> &TACGenerator::getTAC() const {
+    return tac;
+}
+
 void TACGenerator::visitProgram(ProgramNode *node) {
     for (ParseNode *child : node->children())
         child->accept(this);

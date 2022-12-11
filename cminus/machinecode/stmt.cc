@@ -46,33 +46,30 @@ std::string MCOperand::str(DataSize size) const {
         case MCOP_IMM:
             return "$" + std::to_string(value);
     }
+    return "";
 }
 
 std::string MCStatement::str() const {
     if (type == MC_DIREC)
-        return std::string("        .") + direcName + " " + direcContent;
+        return std::string("                .") + direcName + " " +
+        direcContent;
     if (type == MC_LABEL)
         return op1.str() + ":";
-    if (type == MC_PRINT) {
-        // TODO: implement print instruction conversion
-        exit(1);
-    }
     if (mcOpTable.find(type) == mcOpTable.end()) {
         std::cerr << "Could not generate string for machine code operand type"
         << std::endl;
         exit(1);
     }
     std::string opName = mcOpTable.find(type)->second;
-    std::string out = "        " + opName;
+    std::string out = "                " + opName;
     if (op1.type == MCOP_EMPTY)
         return out;
-    while (out.size() < 16)
+    while (out.size() < 32)
         out.push_back(' ');
     out.append(op1.str(size));
     if (op2.type == MCOP_EMPTY)
         return out;
-    while (out.size() < 24)
-        out.push_back(' ');
+    out.append(", ");
     out.append(op2.str(size));
     return out;
 }
@@ -84,7 +81,7 @@ std::string regToString(MCRegister reg, DataSize size) {
             case SIZE_BYTE: out.push_back('b'); break;
             case SIZE_WORD: out.push_back('w'); break;
             case SIZE_DOUBLE: out.push_back('d'); break;
-            default:
+            default: break;
         }
         return out;
     }
@@ -98,7 +95,7 @@ std::string regToString(MCRegister reg, DataSize size) {
         case REG_RDI: out = "di"; break;
         case REG_RBP: out = "bp"; break;
         case REG_RSP: out = "sp"; break;
-        default:
+        default: break;
     }
     // NOTE: We do not use 'h' byte registers here
     if (size == SIZE_BYTE) {
