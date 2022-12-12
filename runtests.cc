@@ -99,8 +99,8 @@ int main() {
         ".txt 2> build/tmp/err.txt");
         std::string ref = getFileContents("build/tmp/test_ref_result.txt");
         std::string cmp = getFileContents("build/tmp/test_cmp_result.txt");
-        if (ref == cmp && ((refCode == 0 && cmpCode == 0) || (refCode != 0 &&
-        cmpCode != 0))) {
+        if ((refCode == 0 && cmpCode == 0 && ref == cmp) || (refCode != 0 &&
+        cmpCode != 0)) {
             pos++;
             std::cout << colored("[ SUCCESS ] ", "green") << filename <<
             std::endl;
