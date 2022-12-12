@@ -48,7 +48,7 @@ std::vector<std::string> getTestFiles() {
     std::vector<std::string> out;
     for (fs::recursive_directory_iterator it("tests/"), end; it != end; it++)
         if (!fs::is_directory(it->path()))
-            out.push_back("tests/" + it->path().filename().string());
+            out.push_back(it->path().relative_path().string());
     std::sort(out.begin(), out.end());
     return out;
 }
@@ -74,8 +74,13 @@ std::string stripWhitespace(std::string inp) {
     return inp.substr(start, end - start);
 }
 
-int main() {
+int main(int argc, char *argv[]) {
     size_t pos = 0, neg = 0;
+    bool fullout = false;
+    for (int i = 1; i < argc; i++) {
+        if (std::string(argv[i]) == "-f")
+            fullout = true;
+    }
     std::cout << std::endl;
     for (const std::string &filename : getTestFiles()) {
         system("print > build/tmp/test_ref.c");
@@ -101,8 +106,9 @@ int main() {
         ".txt 2> build/tmp/err.txt");
         std::string ref = getFileContents("build/tmp/test_ref_result.txt");
         std::string cmp = getFileContents("build/tmp/test_cmp_result.txt");
-        if ((refCode == 0 && cmpCode == 0 && ref == cmp) || (refCode != 0 &&
-        cmpCode != 0)) {
+        bool success = (refCode == 0 && cmpCode == 0 && ref == cmp) || (refCode
+        != 0 && cmpCode != 0);
+        if (success) {
             pos++;
             std::cout << colored("[ SUCCESS ] ", "green") << filename <<
             std::endl;
@@ -110,6 +116,8 @@ int main() {
             neg++;
             std::cout << colored("[ FAILURE ] ", "red") << filename <<
             std::endl;
+        }
+        if (!success || fullout) {
             std::cout << "Expected output:  " << stripWhitespace(ref) <<
             std::endl;
             std::cout << colored("   Exit code:     " + std::to_string(refCode),
