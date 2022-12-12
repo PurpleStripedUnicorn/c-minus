@@ -19,6 +19,8 @@ enum TokenType {
     TOK_COMMA, TOK_SEMICOL,
     TOK_LBRACE, TOK_RBRACE,
     TOK_LCBRACE, TOK_RCBRACE,
+    // Assignment
+    TOK_ASSIGN,
     // Comparisons
     TOK_EQ,
     // Arithmatic

@@ -12,7 +12,7 @@ std::unordered_map<char, TokenType> smallTokens = {
     { '}', TOK_RCBRACE },
     { ',', TOK_COMMA },
     { ';', TOK_SEMICOL },
-    { '=', TOK_EQ },
+    { '=', TOK_ASSIGN },
     { '+', TOK_PLUS },
     { '-', TOK_MINUS },
     { '*', TOK_TIMES },
