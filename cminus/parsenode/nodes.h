@@ -108,7 +108,7 @@ public:
  */
 class IfNode : public TernaryNode {
 public:
-    IfNode(bool hasElse, Loc loc = Loc());
+    IfNode(Loc loc = Loc());
     bool hasElse;
 };
 

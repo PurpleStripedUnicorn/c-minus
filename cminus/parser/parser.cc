@@ -86,8 +86,37 @@ ParseNode *Parser::readStmt() {
         return readDeclaration();
     if (accept(TOK_PRINT))
         return readPrint();
+    if (accept(TOK_IF))
+        return readIf();
     ParseNode *node = readExpr();
     expect(TOK_SEMICOL), next();
+    return node;
+}
+
+ParseNode *Parser::readIf() {
+    IfNode *node = new IfNode(getLoc());
+    expect(TOK_IF), next();
+    expect(TOK_LBRACE), next();
+    node->leftChild = readExpr();
+    expect(TOK_RBRACE), next();
+    node->middleChild = readStmt();
+    node->rightChild = nullptr;
+    node->hasElse = false;
+    if (accept(TOK_ELSE)) {
+        next();
+        node->rightChild = readStmt();
+        node->hasElse = true;
+    }
+    return node;
+}
+
+ParseNode *Parser::readWhile() {
+    WhileNode *node = new WhileNode(getLoc());
+    expect(TOK_WHILE), next();
+    expect(TOK_LBRACE), next();
+    node->leftChild = readExpr();
+    expect(TOK_RBRACE), next();
+    node->rightChild = readStmt();
     return node;
 }
 

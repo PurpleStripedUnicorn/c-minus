@@ -89,10 +89,22 @@ private:
 
     /**
      * Parse a code "statement", which can be both a single "line", or a scope
-     * if '{' is read
+     * if '{' is read, or statements like if or while
      * @return The generated parse (sub)tree
      */
     ParseNode *readStmt();
+
+    /**
+     * Parse an if-statement
+     * @return The generated parse (sub)tree
+     */
+    ParseNode *readIf();
+
+    /**
+     * Parse a while loop
+     * @return The generated parse (sub)tree
+     */
+    ParseNode *readWhile();
 
     /**
      * Parse a scope

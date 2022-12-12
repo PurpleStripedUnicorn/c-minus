@@ -27,6 +27,6 @@ SubNode::SubNode(Loc loc) : BinaryNode(NODE_SUB, loc) { }
 
 MulNode::MulNode(Loc loc) : BinaryNode(NODE_MUL, loc) { }
 
-IfNode::IfNode(bool hasElse, Loc loc) : TernaryNode(NODE_IF, loc) { }
+IfNode::IfNode(Loc loc) : TernaryNode(NODE_IF, loc) { }
 
 WhileNode::WhileNode(Loc loc) : BinaryNode(NODE_WHILE, loc) { }
