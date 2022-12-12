@@ -1,4 +1,5 @@
 
+#include "allocators/registerallocator.h"
 #include "generator.h"
 #include "reg.h"
 #include "tac/stmt.h"
@@ -77,8 +78,7 @@ MCOperand MCGenerator::createOperand(TACOperand op) {
 }
 
 MCRegister MCGenerator::assignRegister(long long var) {
-    (void)var;
-    return REG_RAX;
+    return regAllocator.getRegister(var);
 }
 
 void MCGenerator::convertPrint(const TACStatement &stmt) {

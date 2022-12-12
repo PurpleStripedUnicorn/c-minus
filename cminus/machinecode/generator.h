@@ -2,6 +2,7 @@
 #ifndef FILE_MC_GENERATOR
 #define FILE_MC_GENERATOR
 
+#include "allocators/registerallocator.h"
 #include "reg.h"
 #include "stmt.h"
 #include <ostream>
@@ -74,6 +75,8 @@ private:
     const std::vector<TACStatement> &tac;
     // The generated machine code
     std::vector<MCStatement> machineCode;
+    // Register allocator
+    RegisterAllocator regAllocator;
 
 };
 
