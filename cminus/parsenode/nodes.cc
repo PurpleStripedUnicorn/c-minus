@@ -12,3 +12,11 @@ PrintNode::PrintNode(Loc loc) : UnaryNode(NODE_PRINT, loc) { }
 
 NumberNode::NumberNode(std::string content, Loc loc) : BasicNode(NODE_NUM,
 content, loc) { }
+
+IdentifierNode::IdentifierNode(std::string content, Loc loc) :
+BasicNode(NODE_IDENT, content, loc) { }
+
+DeclarationNode::DeclarationNode(Loc loc, ReturnType declareType) :
+ListNode(NODE_DECL, loc), declareType(declareType) { }
+
+AssignNode::AssignNode(Loc loc) : BinaryNode(NODE_ASSIGN, loc) { }

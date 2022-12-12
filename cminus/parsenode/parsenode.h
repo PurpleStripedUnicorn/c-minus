@@ -21,11 +21,15 @@ enum NodeType {
     NODE_FUNC,
     NODE_STMT,
     // Basic nodes
-    NODE_NUM,
+    NODE_NUM, NODE_IDENT,
     // Arithmatic
     NODE_ADD, NODE_SUB, NODE_MUL, NODE_DIV, NODE_MOD,
     // Print statements
     NODE_PRINT,
+    // Declarations
+    NODE_DECL,
+    // Assignment node
+    NODE_ASSIGN,
 };
 
 /**
