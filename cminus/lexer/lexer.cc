@@ -92,6 +92,12 @@ Token Lexer::readID() {
         return Token(TOK_TYPENAME, ret, savedLoc);
     if (ret == "print")
         return Token(TOK_PRINT, "", savedLoc);
+    if (ret == "if")
+        return Token(TOK_IF, "", savedLoc);
+    if (ret == "else")
+        return Token(TOK_ELSE, "", savedLoc);
+    if (ret == "while")
+        return Token(TOK_WHILE, "", savedLoc);
     return Token(TOK_ID, ret, savedLoc);
 }
 

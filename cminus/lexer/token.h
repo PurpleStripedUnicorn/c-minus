@@ -11,6 +11,8 @@
 enum TokenType {
     // Types used in compiler
     TOK_END, TOK_ERR,
+    // Statements
+    TOK_IF, TOK_ELSE, TOK_WHILE,
     // Identifiers and typenames
     TOK_ID, TOK_TYPENAME,
     // Numbers
