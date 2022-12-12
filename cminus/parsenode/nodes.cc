@@ -20,3 +20,9 @@ DeclarationNode::DeclarationNode(Loc loc, ReturnType declareType) :
 ListNode(NODE_DECL, loc), declareType(declareType) { }
 
 AssignNode::AssignNode(Loc loc) : BinaryNode(NODE_ASSIGN, loc) { }
+
+AddNode::AddNode(Loc loc) : BinaryNode(NODE_ADD, loc) { }
+
+SubNode::SubNode(Loc loc) : BinaryNode(NODE_SUB, loc) { }
+
+MulNode::MulNode(Loc loc) : BinaryNode(NODE_MUL, loc) { }

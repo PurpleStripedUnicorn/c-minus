@@ -1,5 +1,6 @@
 
 #include "debugger/debugger.h"
+#include "parsenode/base.h"
 #include "parsenode/nodes.h"
 #include "parsenode/parsenode.h"
 #include "stmt.h"
@@ -32,10 +33,7 @@ void TACGenerator::visitFunc(FuncNode *node) {
 }
 
 void TACGenerator::visitNumber(NumberNode *node) {
-    TACOperand dst(TACOP_VAR, tempID++);
-    TACOperand src(TACOP_IMM, std::stoll(node->content));
-    push(node->loc, TAC_MOV, SIZE_DOUBLE, dst, src);
-    lastTmp = dst;
+    lastTmp = TACOperand(TACOP_IMM, std::stoll(node->content));
 }
 
 void TACGenerator::visitIdentifier(IdentifierNode *node) {
@@ -45,10 +43,7 @@ void TACGenerator::visitIdentifier(IdentifierNode *node) {
         "in this scope." << std::endl;
         exit(1);
     }
-    TACOperand dst = newTmp();
-    TACOperand src(TACOP_VAR, id);
-    push(node->loc, TAC_MOV, SIZE_DOUBLE, dst, src);
-    lastTmp = dst;
+    lastTmp = TACOperand(TACOP_VAR, id);
 }
 
 void TACGenerator::visitPrint(PrintNode *node) {
@@ -84,6 +79,18 @@ void TACGenerator::visitAssign(AssignNode *node) {
     lastTmp = dst;
 }
 
+void TACGenerator::visitAdd(AddNode *node) {
+    visitBinaryStatement(TAC_ADD, node);
+}
+
+void TACGenerator::visitSub(SubNode *node) {
+    visitBinaryStatement(TAC_SUB, node);
+}
+
+void TACGenerator::visitMul(MulNode *node) {
+    visitBinaryStatement(TAC_MUL, node);
+}
+
 void TACGenerator::push(const TACStatement &stmt) {
     debug.tacStatements.push_back(stmt);
     tac.push_back(stmt);
@@ -96,4 +103,14 @@ void TACGenerator::push(T... args) {
 
 TACOperand TACGenerator::newTmp() {
     return TACOperand(TACOP_VAR, tempID++);
+}
+
+void TACGenerator::visitBinaryStatement(TACType type, BinaryNode *node) {
+    node->leftChild->accept(this);
+    TACOperand src1 = lastTmp;
+    node->rightChild->accept(this);
+    TACOperand src2 = lastTmp;
+    TACOperand dst = newTmp();
+    push(node->loc, type, SIZE_DOUBLE, dst, src1, src2);
+    lastTmp = dst;
 }

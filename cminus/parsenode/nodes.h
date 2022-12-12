@@ -77,4 +77,28 @@ public:
     AssignNode(Loc loc = Loc());
 };
 
+/**
+ * Addition
+ */
+class AddNode : public BinaryNode {
+public:
+    AddNode(Loc loc = Loc());
+};
+
+/**
+ * Subtraction
+ */
+class SubNode : public BinaryNode {
+public:
+    SubNode(Loc loc = Loc());
+};
+
+/**
+ * Multiplication
+ */
+class MulNode : public BinaryNode {
+public:
+    MulNode(Loc loc = Loc());
+};
+
 #endif

@@ -31,6 +31,12 @@ void ParseTreeVisitor::visit(ParseNode *node) {
             visitDeclaration(static_cast<DeclarationNode *>(node)); break;
         case NODE_ASSIGN:
             visitAssign(static_cast<AssignNode *>(node)); break;
+        case NODE_ADD:
+            visitAdd(static_cast<AddNode *>(node)); break;
+        case NODE_SUB:
+            visitSub(static_cast<SubNode *>(node)); break;
+        case NODE_MUL:
+            visitMul(static_cast<MulNode *>(node)); break;
     }
 }
 

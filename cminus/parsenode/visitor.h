@@ -12,6 +12,9 @@ class IdentifierNode;
 class PrintNode;
 class DeclarationNode;
 class AssignNode;
+class AddNode;
+class SubNode;
+class MulNode;
 
 
 /**
@@ -61,6 +64,9 @@ public:
     virtual void visitPrint(PrintNode *node) = 0;
     virtual void visitDeclaration(DeclarationNode *node) = 0;
     virtual void visitAssign(AssignNode *node) = 0;
+    virtual void visitAdd(AddNode *node) = 0;
+    virtual void visitSub(SubNode *node) = 0;
+    virtual void visitMul(MulNode *node) = 0;
 
 };
 

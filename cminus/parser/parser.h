@@ -119,6 +119,18 @@ private:
     ParseNode *readAssign();
 
     /**
+     * Parse a sum (addition, subtraction)
+     * @return The generated parse (sub)tree
+     */
+    ParseNode *readSum();
+
+    /**
+     * Parse a product (multiplication, division, modulo)
+     * @return The generated parse (sub)tree
+     */
+    ParseNode *readProduct();
+
+    /**
      * Parse a leaf in an expression tree
      * @return The generated parse (sub)tree
      */

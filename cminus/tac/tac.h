@@ -2,6 +2,7 @@
 #ifndef FILE_TAC
 #define FILE_TAC
 
+#include "parsenode/base.h"
 #include "parsenode/visitor.h"
 #include "scope.h"
 #include "stmt.h"
@@ -41,6 +42,9 @@ public:
     virtual void visitPrint(PrintNode *node) override;
     virtual void visitDeclaration(DeclarationNode *node) override;
     virtual void visitAssign(AssignNode *node) override;
+    virtual void visitAdd(AddNode *node) override;
+    virtual void visitSub(SubNode *node) override;
+    virtual void visitMul(MulNode *node) override;
 
 private:
 
@@ -59,6 +63,13 @@ private:
      * @warning lastTmp is NOT updated!
      */
     TACOperand newTmp();
+
+    /**
+     * Convert a basic binary arithmatic operation
+     * @param type The TAC operation type
+     * @param node The node to convert to TAC
+     */
+    void visitBinaryStatement(TACType type, BinaryNode *node);
 
     // Generated statements
     std::vector<TACStatement> tac;

@@ -118,7 +118,7 @@ ParseNode *Parser::readExpr() {
 ParseNode *Parser::readAssign() {
     // Right associative
     AssignNode *node = new AssignNode(getLoc());
-    ParseNode *leftNode = readExprLeaf();
+    ParseNode *leftNode = readSum();
     if (!accept(TOK_ASSIGN)) {
         delete node;
         return leftNode;
@@ -132,6 +132,39 @@ ParseNode *Parser::readAssign() {
     ParseNode *rightNode = readAssign();
     node->rightChild = rightNode;
     return node;
+}
+
+ParseNode *Parser::readSum() {
+    // Left associative
+    Loc loc = getLoc();
+    ParseNode *cur = readProduct();
+    while (accept(TOK_PLUS) || accept(TOK_MINUS)) {
+        BinaryNode *newCur;
+        if (accept(TOK_PLUS))
+            newCur = new AddNode(loc);
+        else
+            newCur = new SubNode(loc);
+        next();
+        newCur->leftChild = cur;
+        newCur->rightChild = readProduct();
+        cur = newCur;
+    }
+    return cur;
+}
+
+ParseNode *Parser::readProduct() {
+    // Left associative
+    // TODO: implement division and modulo
+    Loc loc = getLoc();
+    ParseNode *cur = readExprLeaf();
+    while (accept(TOK_TIMES)) {
+        BinaryNode *newCur = new MulNode(loc);
+        next();
+        newCur->leftChild = cur;
+        newCur->rightChild = readExprLeaf();
+        cur = newCur;
+    }
+    return cur;
 }
 
 ParseNode *Parser::readExprLeaf() {
