@@ -86,7 +86,9 @@ ParseNode *Parser::readStmt() {
         return readDeclaration();
     if (accept(TOK_PRINT))
         return readPrint();
-    return readExpr();
+    ParseNode *node = readExpr();
+    expect(TOK_SEMICOL), next();
+    return node;
 }
 
 ParseNode *Parser::readScope() {
@@ -102,7 +104,7 @@ ParseNode *Parser::readPrint() {
     expect(TOK_PRINT), next();
     expect(TOK_LBRACE), next();
     PrintNode *node = new PrintNode(getLoc());
-    node->child = readNum();
+    node->child = readExpr();
     expect(TOK_RBRACE), next();
     expect(TOK_SEMICOL), next();
     return node;
@@ -110,7 +112,6 @@ ParseNode *Parser::readPrint() {
 
 ParseNode *Parser::readExpr() {
     ParseNode *node = readAssign();
-    expect(TOK_SEMICOL), next();
     return node;
 }
 
