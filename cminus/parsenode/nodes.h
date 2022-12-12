@@ -101,4 +101,24 @@ public:
     MulNode(Loc loc = Loc());
 };
 
+/**
+ * If-statements
+ * First child is the condition, second is the "if" code and third is the "else"
+ * code
+ */
+class IfNode : public TernaryNode {
+public:
+    IfNode(bool hasElse, Loc loc = Loc());
+    bool hasElse;
+};
+
+/**
+ * While loops
+ * First child is the condition, second is the looped code
+ */
+class WhileNode : public BinaryNode {
+public:
+    WhileNode(Loc loc = Loc());
+};
+
 #endif

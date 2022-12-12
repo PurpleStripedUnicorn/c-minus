@@ -27,6 +27,16 @@ std::vector<ParseNode *> BinaryNode::children() const {
     return {leftChild, rightChild};
 }
 
+TernaryNode::~TernaryNode() {
+    delete leftChild;
+    delete middleChild;
+    delete rightChild;
+}
+
+std::vector<ParseNode *> TernaryNode::children() const {
+    return {leftChild, middleChild, rightChild};
+}
+
 BasicNode::BasicNode(NodeType type, std::string content, Loc loc) :
 ParseNode(type, loc), content(content) { }
 

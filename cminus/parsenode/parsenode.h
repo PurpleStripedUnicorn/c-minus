@@ -25,6 +25,8 @@ enum NodeType {
     NODE_ADD, NODE_SUB, NODE_MUL, NODE_DIV, NODE_MOD,
     // Print statements
     NODE_PRINT,
+    // Other statements
+    NODE_IF, NODE_WHILE,
     // Declarations
     NODE_DECL,
     // Assignment node

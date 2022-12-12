@@ -57,6 +57,23 @@ public:
 };
 
 /**
+ * Ternary node
+ * Used for example for if statements
+ */
+class TernaryNode : public ParseNode {
+
+public:
+
+    using ParseNode::ParseNode;
+    virtual ~TernaryNode();
+    virtual std::vector<ParseNode *> children() const override;
+    
+    // The children of the node
+    ParseNode *leftChild, *middleChild, *rightChild;
+
+};
+
+/**
  * Basic node type, a node without children that is not empty
  * This could for example be a number or a string
  */
