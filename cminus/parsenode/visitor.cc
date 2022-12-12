@@ -37,6 +37,10 @@ void ParseTreeVisitor::visit(ParseNode *node) {
             visitSub(static_cast<SubNode *>(node)); break;
         case NODE_MUL:
             visitMul(static_cast<MulNode *>(node)); break;
+        case NODE_IF:
+            visitIf(static_cast<IfNode *>(node)); break;
+        case NODE_WHILE:
+            visitWhile(static_cast<WhileNode *>(node)); break;
     }
 }
 

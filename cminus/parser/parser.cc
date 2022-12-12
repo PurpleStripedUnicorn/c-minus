@@ -13,7 +13,7 @@ tree(nullptr), debug(debug) {
 }
 
 Parser::~Parser() {
-
+    delete tree;
 }
 
 void Parser::parse() {
@@ -147,6 +147,7 @@ ParseNode *Parser::readExpr() {
 ParseNode *Parser::readAssign() {
     // Right associative
     AssignNode *node = new AssignNode(getLoc());
+    node->leftChild = nullptr, node->rightChild = nullptr;
     ParseNode *leftNode = readSum();
     if (!accept(TOK_ASSIGN)) {
         delete node;
@@ -158,8 +159,7 @@ ParseNode *Parser::readAssign() {
         std::cerr << "Expected an identifier before assignment." << std::endl;
         exit(1);
     }
-    ParseNode *rightNode = readAssign();
-    node->rightChild = rightNode;
+    node->rightChild = readAssign();
     return node;
 }
 

@@ -11,7 +11,7 @@ const std::unordered_map<MCType, MCFormat> mcOpTable = {
     { MC_MUL, MCFormat("imul", true) },
     { MC_NEG, MCFormat("neg", true) },
     { MC_MOVE, MCFormat("mov", true) },
-    { MC_COMP, MCFormat("cmp", true) },
+    { MC_CMP, MCFormat("cmp", true) },
     { MC_JE, MCFormat("je") },
     { MC_JNE, MCFormat("jne") },
     { MC_JL, MCFormat("jl", "jb") },

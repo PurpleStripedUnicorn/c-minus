@@ -114,6 +114,8 @@ void Debugger::tac(std::ostream &os) const {
 
 void Debugger::parser(std::ostream &os, const ParseNode *node, size_t depth)
 const {
+    if (node == nullptr)
+        return;
     for (size_t i = 0; i < depth; i++)
         os << "   ";
     if (nodeTypeTable.find(node->getType()) == nodeTypeTable.end())

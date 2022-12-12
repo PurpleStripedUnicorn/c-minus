@@ -44,6 +44,18 @@ void MCGenerator::generate() {
             case TAC_MOV:
                 convertMove(stmt);
                 break;
+            case TAC_JUMP:
+            case TAC_JE:
+            case TAC_JNE:
+            case TAC_JL:
+            case TAC_JLE:
+            case TAC_JG:
+            case TAC_JGE:
+                convertJump(stmt);
+                break;
+            case TAC_LABEL:
+                convertLabel(stmt);
+                break;
             default:
                 std::cerr << "Could not convert some TAC statement to machine "
                 "code at " << stmt.loc << std::endl;
@@ -85,7 +97,7 @@ void MCGenerator::convertPrint(const TACStatement &stmt) {
     // [1] mov src rdi
     // [2] call writeinteger
     MCOperand src = createOperand(stmt.src1);
-    machineCode.push_back(MCStatement(MC_MOVE, SIZE_QUAD, src,
+    machineCode.push_back(MCStatement(MC_MOVE, SIZE_DOUBLE, src,
     MCOperand(REG_RDI)));
     machineCode.push_back(MCStatement(MC_CALL, SIZE_EMPTY,
     MCOperand("writeinteger")));
@@ -95,7 +107,7 @@ void MCGenerator::convertMove(const TACStatement &stmt) {
     // [1] mov src1 dst
     MCOperand op1 = createOperand(stmt.src1);
     MCOperand dst = createOperand(stmt.dst);
-    machineCode.push_back(MCStatement(MC_MOVE, SIZE_QUAD, op1, dst));
+    machineCode.push_back(MCStatement(MC_MOVE, SIZE_DOUBLE, op1, dst));
 }
 
 void MCGenerator::convertBinaryArithmatic(const TACStatement &stmt) {
@@ -111,6 +123,34 @@ void MCGenerator::convertBinaryArithmatic(const TACStatement &stmt) {
     MCOperand op1 = createOperand(stmt.src1);
     MCOperand op2 = createOperand(stmt.src2);
     MCOperand dst = createOperand(stmt.dst);
-    machineCode.push_back(MCStatement(MC_MOVE, SIZE_QUAD, op1, dst));
-    machineCode.push_back(MCStatement(type, SIZE_QUAD, op2, dst));
+    machineCode.push_back(MCStatement(MC_MOVE, SIZE_DOUBLE, op1, dst));
+    machineCode.push_back(MCStatement(type, SIZE_DOUBLE, op2, dst));
+}
+
+void MCGenerator::convertJump(const TACStatement &stmt) {
+    if (stmt.type == TAC_JUMP) {
+        machineCode.push_back(MCStatement(MC_JUMP, SIZE_EMPTY, createOperand(
+        stmt.dst)));
+        return;
+    }
+    MCType type;
+    switch (stmt.type) {
+        case TAC_JE: type = MC_JE; break;
+        case TAC_JNE: type = MC_JNE; break;
+        case TAC_JL: type = MC_JL; break;
+        case TAC_JLE: type = MC_JLE; break;
+        case TAC_JG: type = MC_JG; break;
+        case TAC_JGE: type = MC_JGE; break;
+        default: break;
+    }
+    MCOperand op1 = createOperand(stmt.src1);
+    MCOperand op2 = createOperand(stmt.src2);
+    MCOperand label = createOperand(stmt.dst);
+    machineCode.push_back(MCStatement(MC_CMP, SIZE_DOUBLE, op1, op2));
+    machineCode.push_back(MCStatement(type, SIZE_DOUBLE, label));
+}
+
+void MCGenerator::convertLabel(const TACStatement &stmt) {
+    machineCode.push_back(MCStatement(MC_LABEL, SIZE_EMPTY, createOperand(
+    stmt.dst)));
 }

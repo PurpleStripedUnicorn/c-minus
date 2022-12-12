@@ -15,6 +15,8 @@ class AssignNode;
 class AddNode;
 class SubNode;
 class MulNode;
+class IfNode;
+class WhileNode;
 
 
 /**
@@ -67,6 +69,8 @@ public:
     virtual void visitAdd(AddNode *node) = 0;
     virtual void visitSub(SubNode *node) = 0;
     virtual void visitMul(MulNode *node) = 0;
+    virtual void visitIf(IfNode *node) = 0;
+    virtual void visitWhile(WhileNode *node) = 0;
 
 };
 

@@ -19,6 +19,8 @@ enum TACType {
     TAC_MOV,
     // Jumps and branches
     TAC_LABEL, TAC_JUMP,
+    // Conditional jumps
+    TAC_JE, TAC_JNE, TAC_JL, TAC_JLE, TAC_JG, TAC_JGE
 };
 
 /**

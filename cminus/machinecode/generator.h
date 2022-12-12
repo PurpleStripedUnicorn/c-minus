@@ -71,6 +71,18 @@ private:
      */
     void convertMove(const TACStatement &stmt);
 
+    /**
+     * Convert a (conditional) jump to machine code
+     * @param stmt The statement to convert
+     */
+    void convertJump(const TACStatement &stmt);
+
+    /**
+     * Convert a label to machine code
+     * @param stmt The statement to convert
+     */
+    void convertLabel(const TACStatement &stmt);
+
     // Reference to the input three-address code
     const std::vector<TACStatement> &tac;
     // The generated machine code

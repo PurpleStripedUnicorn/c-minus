@@ -7,7 +7,8 @@
 #include "tac.h"
 #include <iostream>
 
-TACGenerator::TACGenerator(Debugger &debug) : debug(debug), tempID(0) { }
+TACGenerator::TACGenerator(Debugger &debug) : debug(debug), tempID(0),
+labelID(0) { }
 
 TACGenerator::~TACGenerator() { }
 
@@ -89,6 +90,36 @@ void TACGenerator::visitSub(SubNode *node) {
 
 void TACGenerator::visitMul(MulNode *node) {
     visitBinaryStatement(TAC_MUL, node);
+}
+
+void TACGenerator::visitIf(IfNode *node) {
+    //   je .L1, [left], 0
+    //   [middle]
+    //   jmp .L2            (for if-else)
+    // .L1
+    //   [right]            (for if-else)
+    // .L2                  (for if-else)
+    node->leftChild->accept(this);
+    TACOperand label1(TACOP_LABEL, labelID++);
+    TACOperand zero(TACOP_IMM, 0);
+    push(node->loc, TAC_JE, SIZE_DOUBLE, label1, lastTmp, zero);
+    node->middleChild->accept(this);
+    TACOperand label2;
+    if (node->hasElse) {
+        label2 = TACOperand(TACOP_LABEL, labelID++);
+        push(node->loc, TAC_JUMP, SIZE_EMPTY, label2);
+    }
+    push(node->loc, TAC_LABEL, SIZE_EMPTY, label1);
+    if (node->hasElse) {
+        node->rightChild->accept(this);
+        push(node->loc, TAC_LABEL, SIZE_EMPTY, label2);
+    }
+}
+
+void TACGenerator::visitWhile(WhileNode *node) {
+    (void)node;
+    std::cerr << "Not implemented" << std::endl;
+    exit(1);
 }
 
 void TACGenerator::push(const TACStatement &stmt) {

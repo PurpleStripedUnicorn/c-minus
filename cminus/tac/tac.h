@@ -45,6 +45,8 @@ public:
     virtual void visitAdd(AddNode *node) override;
     virtual void visitSub(SubNode *node) override;
     virtual void visitMul(MulNode *node) override;
+    virtual void visitIf(IfNode *node) override;
+    virtual void visitWhile(WhileNode *node) override;
 
 private:
 
@@ -77,6 +79,8 @@ private:
     Debugger &debug;
     // Temporary variable counter
     long long tempID;
+    // Label ID counter
+    long long labelID;
     // Last temporary value that was written to (is a TAC operand)
     TACOperand lastTmp;
     // Scope manager

@@ -38,7 +38,7 @@ enum MCType {
     // Move instruction
     MC_MOVE,
     // Compare instruction
-    MC_COMP,
+    MC_CMP,
     // Jumps and branches
     MC_JE, MC_JNE, MC_JL, MC_JLE, MC_JG, MC_JGE,
     // Labels and jump
