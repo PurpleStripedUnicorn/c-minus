@@ -12,9 +12,10 @@
  * CORRECTLY TO PREVENT LOSS OF DATA OR CORRUPTION!
  */
 
-#include <iostream>
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <stdio.h>
 #include <string>
 #include <vector>
@@ -48,6 +49,7 @@ std::vector<std::string> getTestFiles() {
     for (fs::recursive_directory_iterator it("tests/"), end; it != end; it++)
         if (!fs::is_directory(it->path()))
             out.push_back("tests/" + it->path().filename().string());
+    std::sort(out.begin(), out.end());
     return out;
 }
 
