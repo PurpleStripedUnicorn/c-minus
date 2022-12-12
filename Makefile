@@ -27,7 +27,7 @@ endif
 
 # Makefile starting point
 .PHONY: all
-all: build $(buildfolders) build/main
+all: build $(buildfolders) build/main build/runtests
 
 # Clean up build fodler and output datapack
 clean: clean_build clean_dbg
@@ -52,10 +52,10 @@ build/%.o: cminus/%.cc Makefile
 	$(cc) $(cppargs) -MMD -MP -c $< -o $@
 
 # Testing program
-# build/tests/%: tests/%.cc build/tests
-# 	$(cc) $(cppargs) -o $@ $<
-# build/tests:
-# 	mkdir build/tests
+build/runtests: runtests.cc build/tmp
+	$(cc) $(cppargs) -o $@ $<
+build/tmp:
+	mkdir build/tmp
 
 # Create folders if neccessary
 build:
