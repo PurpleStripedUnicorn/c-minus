@@ -107,10 +107,39 @@ private:
     ParseNode *readPrint();
 
     /**
-     * Prase a single number
+     * Parse a general expression
+     * @return The generated parse (sub)tree
+     */
+    ParseNode *readExpr();
+
+    /**
+     * Parse an assignment (or lower node)
+     * @return The generated parse (sub)tree
+     */
+    ParseNode *readAssign();
+
+    /**
+     * Parse a leaf in an expression tree
+     * @return The generated parse (sub)tree
+     */
+    ParseNode *readExprLeaf();
+
+    /**
+     * Parse a single number
      * @return The generated parse (sub)tree
      */
     ParseNode *readNum();
+
+    /**
+     * Parse an identifier
+     * @return The generated parse (sub)tree
+     */
+    ParseNode *readIdent();
+
+    /**
+     * Parse a declaration statement
+     */
+    ParseNode *readDeclaration();
 
     // The lexer component
     Lexer &lexer;

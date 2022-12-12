@@ -82,7 +82,11 @@ ParseNode *Parser::readStmt() {
     if (accept(TOK_LCBRACE))
         return readScope();
     // TODO: Add more cases here when they are implemented
-    return readPrint();
+    if (accept(TOK_TYPENAME))
+        return readDeclaration();
+    if (accept(TOK_PRINT))
+        return readPrint();
+    return readExpr();
 }
 
 ParseNode *Parser::readScope() {
@@ -104,9 +108,73 @@ ParseNode *Parser::readPrint() {
     return node;
 }
 
+ParseNode *Parser::readExpr() {
+    ParseNode *node = readAssign();
+    expect(TOK_SEMICOL), next();
+    return node;
+}
+
+ParseNode *Parser::readAssign() {
+    // Right associative
+    AssignNode *node = new AssignNode(getLoc());
+    ParseNode *leftNode = readExprLeaf();
+    if (!accept(TOK_ASSIGN)) {
+        delete node;
+        return leftNode;
+    }
+    node->leftChild = leftNode;
+    next();
+    if (leftNode->getType() != NODE_IDENT) {
+        std::cerr << "Expected an identifier before assignment." << std::endl;
+        exit(1);
+    }
+    ParseNode *rightNode = readAssign();
+    node->rightChild = rightNode;
+    return node;
+}
+
+ParseNode *Parser::readExprLeaf() {
+    if (accept(TOK_NUM))
+        return readNum();
+    if (accept(TOK_ID))
+        return readIdent();
+    std::cerr << "Expected an expression base." << std::endl;
+    exit(1);
+    return nullptr;
+}
+
 ParseNode *Parser::readNum() {
     expect(TOK_NUM);
     NumberNode *node = new NumberNode(cur().content, getLoc());
     next();
+    return node;
+}
+
+ParseNode *Parser::readIdent() {
+    expect(TOK_ID);
+    IdentifierNode *node = new IdentifierNode(cur().content, getLoc());
+    next();
+    return node;
+}
+
+ParseNode *Parser::readDeclaration() {
+    expect(TOK_TYPENAME);
+    std::string tname = cur().content;
+    if (tname == "void") {
+        std::cerr << "Cannot create variables of type 'void'." << std::endl;
+        exit(1);
+    }
+    ReturnType type = RT_INT;
+    if (tname == "int")
+        type = RT_INT;
+    // TODO: implement more types
+    DeclarationNode *node = new DeclarationNode(getLoc(), type);
+    next();
+    std::vector<ParseNode *> children;
+    children.push_back(readIdent());
+    while (accept(TOK_COMMA))
+        next(), children.push_back(readIdent());
+    expect(TOK_SEMICOL), next();
+    node->childNodes = children;
     return node;
 }
