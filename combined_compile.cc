@@ -30,7 +30,10 @@ int main(int argc, char *argv[]) {
         std::cerr << "Usage: " << argv[0] << " <input file>" << std::endl;
         return 1;
     }
-    int status = system(("build/main " + std::string(argv[1])).c_str());
+    system(("build/main " + std::string(argv[1]) + " > build/tmp/combined.s")
+    .c_str());
+    system("gcc -o build/tmp/combined build/tmp/combined.s");
+    int status = system("build/tmp/combined");
     int ret = WEXITSTATUS(status);
     std::cout << colored("EXIT CODE: " + std::to_string(ret), "cyan") <<
     std::endl;
