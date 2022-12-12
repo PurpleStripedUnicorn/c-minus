@@ -50,9 +50,13 @@ std::string MCOperand::str(DataSize size) const {
 }
 
 std::string MCStatement::str() const {
-    if (type == MC_DIREC)
-        return std::string("                .") + direcName + " " +
-        direcContent;
+    if (type == MC_DIREC) {
+        std::string out = "                ." + direcName + " ";
+        while (out.size() < 24)
+            out.push_back(' ');
+        out.append(direcContent);
+        return out;
+    }
     if (type == MC_LABEL)
         return op1.str() + ":";
     if (mcOpTable.find(type) == mcOpTable.end()) {
@@ -64,7 +68,8 @@ std::string MCStatement::str() const {
     std::string out = "                " + opName;
     if (op1.type == MCOP_EMPTY)
         return out;
-    while (out.size() < 32)
+    out.push_back(' ');
+    while (out.size() < 24)
         out.push_back(' ');
     out.append(op1.str(size));
     if (op2.type == MCOP_EMPTY)
