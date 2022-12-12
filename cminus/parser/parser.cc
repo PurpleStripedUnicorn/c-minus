@@ -170,6 +170,7 @@ ParseNode *Parser::readDeclaration() {
     // TODO: implement more types
     DeclarationNode *node = new DeclarationNode(getLoc(), type);
     next();
+    // NOTE: currently it is guaranteed that the children are identifiers
     std::vector<ParseNode *> children;
     children.push_back(readIdent());
     while (accept(TOK_COMMA))

@@ -3,6 +3,7 @@
 #define FILE_TAC
 
 #include "parsenode/visitor.h"
+#include "scope.h"
 #include "stmt.h"
 #include <vector>
 
@@ -36,7 +37,10 @@ public:
     virtual void visitScope(ScopeNode *node) override;
     virtual void visitFunc(FuncNode *node) override;
     virtual void visitNumber(NumberNode *node) override;
+    virtual void visitIdentifier(IdentifierNode *node) override;
     virtual void visitPrint(PrintNode *node) override;
+    virtual void visitDeclaration(DeclarationNode *node) override;
+    virtual void visitAssign(AssignNode *node) override;
 
 private:
 
@@ -48,6 +52,14 @@ private:
     void push(const TACStatement &stmt);
     template<class... T> void push(T... args);
 
+    /**
+     * Create a new temporary TAC operand
+     * @post The tempID is updated
+     * @return The newly created operand
+     * @warning lastTmp is NOT updated!
+     */
+    TACOperand newTmp();
+
     // Generated statements
     std::vector<TACStatement> tac;
     // The debugger
@@ -56,6 +68,8 @@ private:
     long long tempID;
     // Last temporary value that was written to (is a TAC operand)
     TACOperand lastTmp;
+    // Scope manager
+    ScopeManager scopes;
 
 };
 

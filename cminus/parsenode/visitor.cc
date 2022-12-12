@@ -23,8 +23,14 @@ void ParseTreeVisitor::visit(ParseNode *node) {
             visitFunc(static_cast<FuncNode *>(node)); break;
         case NODE_NUM:
             visitNumber(static_cast<NumberNode *>(node)); break;
+        case NODE_IDENT:
+            visitIdentifier(static_cast<IdentifierNode *>(node)); break;
         case NODE_PRINT:
             visitPrint(static_cast<PrintNode *>(node)); break;
+        case NODE_DECL:
+            visitDeclaration(static_cast<DeclarationNode *>(node)); break;
+        case NODE_ASSIGN:
+            visitAssign(static_cast<AssignNode *>(node)); break;
     }
 }
 

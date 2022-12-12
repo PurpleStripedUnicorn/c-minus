@@ -36,7 +36,6 @@ const std::unordered_map<NodeType, std::string> nodeTypeTable = {
     { NODE_PROGRAM, "PROGRAM" },
     { NODE_SCOPE, "SCOPE" },
     { NODE_FUNC, "FUNC" },
-    { NODE_STMT, "STMT" },
     { NODE_NUM, "NUM" },
     { NODE_ADD, "+" },
     { NODE_SUB, "-" },

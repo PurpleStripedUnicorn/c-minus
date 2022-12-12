@@ -4,6 +4,7 @@
 #include "parsenode/parsenode.h"
 #include "stmt.h"
 #include "tac.h"
+#include <iostream>
 
 TACGenerator::TACGenerator(Debugger &debug) : debug(debug), tempID(0) { }
 
@@ -19,9 +20,10 @@ void TACGenerator::visitProgram(ProgramNode *node) {
 }
 
 void TACGenerator::visitScope(ScopeNode *node) {
-    // TODO: Add scope functionality
+    scopes.pushScope();
     for (ParseNode *child : node->children())
         child->accept(this);
+    scopes.popScope();
 }
 
 void TACGenerator::visitFunc(FuncNode *node) {
@@ -36,9 +38,50 @@ void TACGenerator::visitNumber(NumberNode *node) {
     lastTmp = dst;
 }
 
+void TACGenerator::visitIdentifier(IdentifierNode *node) {
+    long long id = scopes.find(node->content);
+    if (id == -1) {
+        std::cerr << "The identifier '" << node->content << "' is not defined "
+        "in this scope." << std::endl;
+        exit(1);
+    }
+    TACOperand dst = newTmp();
+    TACOperand src(TACOP_VAR, id);
+    push(node->loc, TAC_MOV, SIZE_DOUBLE, dst, src);
+    lastTmp = dst;
+}
+
 void TACGenerator::visitPrint(PrintNode *node) {
     node->child->accept(this);
     push(node->loc, TAC_PRINT, SIZE_DOUBLE, TACOperand(), lastTmp);
+}
+
+void TACGenerator::visitDeclaration(DeclarationNode *node) {
+    // NOTE: Currently it is guaranteed that the children are identifier nodes
+    for (ParseNode *child : node->childNodes) {
+        std::string name = static_cast<IdentifierNode *>(child)->content;
+        if (scopes.find(name, false) != -1) {
+            std::cerr << "Variable with name '" + name + "' already defined in "
+            "this scope." << std::endl;
+            exit(1);
+        }
+        scopes.add(name, tempID++);
+    }
+}
+
+void TACGenerator::visitAssign(AssignNode *node) {
+    std::string name = static_cast<IdentifierNode *>(node->leftChild)->content;
+    long long id = scopes.find(name);
+    if (id == -1) {
+        std::cerr << "Variable name '" + name + "' was not declared in this "
+        "scope." << std::endl;
+        exit(1);
+    }
+    node->rightChild->accept(this);
+    TACOperand dst(TACOP_VAR, id);
+    TACOperand src = lastTmp;
+    push(node->loc, TAC_MOV, SIZE_DOUBLE, dst, src);
+    lastTmp = dst;
 }
 
 void TACGenerator::push(const TACStatement &stmt) {
@@ -49,4 +92,8 @@ void TACGenerator::push(const TACStatement &stmt) {
 template<class... T>
 void TACGenerator::push(T... args) {
     push(TACStatement(args...));
+}
+
+TACOperand TACGenerator::newTmp() {
+    return TACOperand(TACOP_VAR, tempID++);
 }

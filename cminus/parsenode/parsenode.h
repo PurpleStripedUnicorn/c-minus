@@ -19,7 +19,6 @@ enum NodeType {
     NODE_PROGRAM,
     NODE_SCOPE,
     NODE_FUNC,
-    NODE_STMT,
     // Basic nodes
     NODE_NUM, NODE_IDENT,
     // Arithmatic
