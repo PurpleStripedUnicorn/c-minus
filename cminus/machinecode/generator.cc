@@ -16,9 +16,7 @@ writeinteger:
                 popq    %rbp
                 ret)!--!";
 
-MCGenerator::MCGenerator(const std::vector<TACStatement> &tac) : tac(tac) {
-
-}
+MCGenerator::MCGenerator(const std::vector<TACStatement> &tac) : tac(tac) { }
 
 MCGenerator::~MCGenerator() { }
 
@@ -84,6 +82,8 @@ MCRegister MCGenerator::assignRegister(long long var) {
 }
 
 void MCGenerator::convertPrint(const TACStatement &stmt) {
+    // [1] mov src rdi
+    // [2] call writeinteger
     MCOperand src = createOperand(stmt.src1);
     machineCode.push_back(MCStatement(MC_MOVE, SIZE_QUAD, src,
     MCOperand(REG_RDI)));
