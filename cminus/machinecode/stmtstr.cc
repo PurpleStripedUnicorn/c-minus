@@ -5,26 +5,26 @@
 #include <string>
 #include <unordered_map>
 
-const std::unordered_map<MCType, std::string> mcOpTable = {
-    { MC_ADD, "add" },
-    { MC_SUB, "sub" },
-    { MC_MUL, "mul" },
-    { MC_NEG, "neg" },
-    { MC_MOVE, "mov" },
-    { MC_COMP, "cmp" },
-    { MC_JE, "je" },
-    { MC_JNE, "jne" },
-    { MC_JL, "jl" },
-    { MC_JLE, "jle" },
-    { MC_JG, "jg" },
-    { MC_JGE, "jge" },
-    { MC_JUMP, "jmp" },
-    { MC_PUSH, "push" },
-    { MC_POP, "pop" },
-    { MC_LEAVE, "leave" },
-    { MC_RET, "ret" },
-    { MC_CALL, "call" },
-    { MC_LEA, "lea" },
+const std::unordered_map<MCType, MCFormat> mcOpTable = {
+    { MC_ADD, MCFormat("add", true) },
+    { MC_SUB, MCFormat("sub", true) },
+    { MC_MUL, MCFormat("imul", true) },
+    { MC_NEG, MCFormat("neg", true) },
+    { MC_MOVE, MCFormat("mov", true) },
+    { MC_COMP, MCFormat("cmp", true) },
+    { MC_JE, MCFormat("je") },
+    { MC_JNE, MCFormat("jne") },
+    { MC_JL, MCFormat("jl", "jb") },
+    { MC_JLE, MCFormat("jle", "jbe") },
+    { MC_JG, MCFormat("jg", "ja") },
+    { MC_JGE, MCFormat("jge", "jae") },
+    { MC_JUMP, MCFormat("jmp") },
+    { MC_PUSH, MCFormat("push", true) },
+    { MC_POP, MCFormat("pop", true) },
+    { MC_LEAVE, MCFormat("leave") },
+    { MC_RET, MCFormat("ret") },
+    { MC_CALL, MCFormat("call") },
+    { MC_LEA, MCFormat("lea", true) },
 };
 
 std::string mcOperandString(const MCOperand &op, DataSize size) {
@@ -66,7 +66,23 @@ std::string mcStatementString(const MCStatement &stmt) {
         << std::endl;
         exit(1);
     }
-    std::string opName = mcOpTable.find(stmt.type)->second;
+    MCFormat opFormat = mcOpTable.find(stmt.type)->second;
+    std::string opName = opFormat.name;
+    if (opFormat.hasSigned && stmt.isSigned)
+        opName = opFormat.signedName;
+    if (opFormat.hasSize) {
+        switch (stmt.size) {
+            case SIZE_EMPTY:
+                std::cerr << "Attempted to append size but no size was given."
+                << std::endl;
+                exit(1);
+            case SIZE_BYTE: opName.push_back('b'); break;
+            case SIZE_WORD: opName.push_back('w'); break;
+            case SIZE_DOUBLE: opName.push_back('l'); break;
+            case SIZE_QUAD: opName.push_back('q'); break;
+            default: break;
+        }
+    }
     std::string out = "                " + opName;
     if (stmt.op1.type == MCOP_EMPTY)
         return out;

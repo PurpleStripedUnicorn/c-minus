@@ -3,12 +3,30 @@
 #define FILE_MC_STMTSTR
 
 #include "reg.h"
+#include "stmt.h"
 #include "util/sizes.h"
 #include <ostream>
 #include <string>
 
 struct MCOperand;
 struct MCStatement;
+
+/**
+ * The formatting of a specific x86 instruction. Indicates if there are special
+ * signed versions, if it depends on size, etc.
+ * @note The enum type of the machine code operation is not included because it
+ * should be the key of a map!
+ */
+struct MCFormat {
+    MCFormat(std::string name, bool hasSize = false) : name(name),
+    hasSigned(false), hasSize(hasSize) { }
+    MCFormat(std::string name, std::string signedName, bool hasSize = false) :
+    name(name), signedName(signedName), hasSigned(true), hasSize(hasSize) { }
+    std::string name;
+    std::string signedName;
+    bool hasSigned;
+    bool hasSize;
+};
 
 /**
  * Convert a machine code operand to a string
