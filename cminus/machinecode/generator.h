@@ -3,6 +3,7 @@
 #define FILE_MC_GENERATOR
 
 #include "allocators/registerallocator.h"
+#include "debugger/debugger.h"
 #include "reg.h"
 #include "stmt.h"
 #include <ostream>
@@ -18,8 +19,9 @@ public:
     /**
      * Constructor
      * @param tac A constant reference to the input three-address code
+     * @param debug The debugger
      */
-    MCGenerator(const std::vector<TACStatement> &tac);
+    MCGenerator(const std::vector<TACStatement> &tac, Debugger &debug);
 
     /**
      * Destructor
@@ -89,6 +91,8 @@ private:
     std::vector<MCStatement> machineCode;
     // Register allocator
     RegisterAllocator regAllocator;
+    // The debugger
+    Debugger &debug;
 
 };
 

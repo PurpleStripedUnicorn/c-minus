@@ -136,7 +136,6 @@ std::string Debugger::tacOperandStr(const TACOperand &op) const {
         return std::to_string(op.value);
     if (op.type == TACOP_LABEL)
         return ".L" + std::to_string(op.value);
-    std::cerr << "Cound not convert TAC operand to string" << std::endl;
-    exit(1);
+    logger.error("Could not convert TAC operand to string");
     return "";
 }

@@ -47,12 +47,8 @@ bool Parser::accept(TokenType type) const {
 }
 
 void Parser::expect(TokenType type) const {
-    if (!accept(type)) {
-        std::cerr << "Incorrect token type matched at " << getLoc() << ". "
-        "Expected (" << int(type) << ") got (" << int(cur().type) << ")."
-        << std::endl;
-        exit(1);
-    }
+    if (!accept(type))
+        debug.logger.error("Unexpected token");
 }
 
 ParseNode *Parser::readProgram() {
@@ -155,10 +151,9 @@ ParseNode *Parser::readAssign() {
     }
     node->leftChild = leftNode;
     next();
-    if (leftNode->getType() != NODE_IDENT) {
-        std::cerr << "Expected an identifier before assignment." << std::endl;
-        exit(1);
-    }
+    if (leftNode->getType() != NODE_IDENT)
+        debug.logger.error("Expected an identifier at the left side of an "
+        "assignment", node->loc);
     node->rightChild = readAssign();
     return node;
 }
@@ -201,8 +196,7 @@ ParseNode *Parser::readExprLeaf() {
         return readNum();
     if (accept(TOK_ID))
         return readIdent();
-    std::cerr << "Expected an expression base." << std::endl;
-    exit(1);
+    debug.logger.error("Expected a number or an identifier", getLoc());
     return nullptr;
 }
 
@@ -223,10 +217,9 @@ ParseNode *Parser::readIdent() {
 ParseNode *Parser::readDeclaration() {
     expect(TOK_TYPENAME);
     std::string tname = cur().content;
-    if (tname == "void") {
-        std::cerr << "Cannot create variables of type 'void'." << std::endl;
-        exit(1);
-    }
+    if (tname == "void")
+        debug.logger.error("Cannot create variables of type \"void\"",
+        getLoc());
     ReturnType type = RT_INT;
     if (tname == "int")
         type = RT_INT;

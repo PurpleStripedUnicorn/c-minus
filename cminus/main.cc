@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
     parser.getTree()->accept(&tac);
     debug.tac(tacDebug);
     // Machine code generation
-    MCGenerator mc(tac.getTAC());
+    MCGenerator mc(tac.getTAC(), debug);
     mc.generate();
     mc.write(std::cout);
     return 0;

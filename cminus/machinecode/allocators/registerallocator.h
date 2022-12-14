@@ -2,6 +2,7 @@
 #ifndef FILE_REGISTERALLOCATOR
 #define FILE_REGISTERALLOCATOR
 
+#include "debugger/debugger.h"
 #include "machinecode/reg.h"
 #include <set>
 #include <unordered_map>
@@ -12,8 +13,9 @@ public:
 
     /**
      * Constructor
+     * @param debug The debugger
      */
-    RegisterAllocator();
+    RegisterAllocator(Debugger &debug);
 
     /**
      * Destructor
@@ -35,10 +37,11 @@ private:
 
     // All registers that are still free to be used
     std::set<MCRegister> freeRegisters;
-
     // Allocated registers, where the TAC variable IDs are mapped to register
     // numbers
     std::unordered_map<long long, MCRegister> usedRegisters;
+    // The debugger
+    Debugger &debug;
 
 };
 

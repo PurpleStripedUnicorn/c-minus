@@ -39,11 +39,9 @@ void TACGenerator::visitNumber(NumberNode *node) {
 
 void TACGenerator::visitIdentifier(IdentifierNode *node) {
     long long id = scopes.find(node->content);
-    if (id == -1) {
-        std::cerr << "The identifier '" << node->content << "' is not defined "
-        "in this scope." << std::endl;
-        exit(1);
-    }
+    if (id == -1)
+        debug.logger.error("The identifier \"" + node->content + "\" was not "
+        "declared in this scope");
     lastTmp = TACOperand(TACOP_VAR, id);
 }
 
@@ -56,11 +54,9 @@ void TACGenerator::visitDeclaration(DeclarationNode *node) {
     // NOTE: Currently it is guaranteed that the children are identifier nodes
     for (ParseNode *child : node->childNodes) {
         std::string name = static_cast<IdentifierNode *>(child)->content;
-        if (scopes.find(name, false) != -1) {
-            std::cerr << "Variable with name '" + name + "' already defined in "
-            "this scope." << std::endl;
-            exit(1);
-        }
+        if (scopes.find(name, false) != -1)
+            debug.logger.error("The name \"" + name + "\" was already declared "
+            "in this scope", node->loc);
         scopes.add(name, tempID++);
     }
 }
@@ -69,9 +65,8 @@ void TACGenerator::visitAssign(AssignNode *node) {
     std::string name = static_cast<IdentifierNode *>(node->leftChild)->content;
     long long id = scopes.find(name);
     if (id == -1) {
-        std::cerr << "Variable name '" + name + "' was not declared in this "
-        "scope." << std::endl;
-        exit(1);
+        debug.logger.error("The name \"" + name + "\" was not declared in this "
+        "scope", node->loc);
     }
     node->rightChild->accept(this);
     TACOperand dst(TACOP_VAR, id);

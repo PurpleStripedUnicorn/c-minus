@@ -2,6 +2,7 @@
 #ifndef FILE_DEBUG
 #define FILE_DEBUG
 
+#include "logger.h"
 #include "tac/stmt.h"
 #include <string>
 #include <vector>
@@ -53,6 +54,8 @@ public:
     // Generated TAC, this is a copy of the vector in the TAC component, to
     // allow for the possibility of only debugging specific parts of code
     std::vector<TACStatement> tacStatements;
+    // The error logger
+    Logger logger;
 
 private:
 
@@ -70,10 +73,6 @@ private:
      * @return The string representation of the operand
      */
     std::string tacOperandStr(const TACOperand &op) const;
-
-    /**
-     * 
-     */
 
     // Indicates if the debugger is enabled
     bool enabled;

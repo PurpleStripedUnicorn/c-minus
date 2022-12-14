@@ -65,8 +65,7 @@ Token Lexer::getToken() {
         next();
         return getToken();
     }
-    std::cerr << "Lexer error, unrecognized token." << std::endl;
-    exit(1);
+    debug.logger.error("Unrecognized token", savedLoc);
 }
 
 char Lexer::cur() const {

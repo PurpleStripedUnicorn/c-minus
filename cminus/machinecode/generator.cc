@@ -17,7 +17,8 @@ writeinteger:
                 popq    %rbp
                 ret)!--!";
 
-MCGenerator::MCGenerator(const std::vector<TACStatement> &tac) : tac(tac) { }
+MCGenerator::MCGenerator(const std::vector<TACStatement> &tac, Debugger &debug)
+: tac(tac), regAllocator(debug), debug(debug) { }
 
 MCGenerator::~MCGenerator() { }
 
@@ -57,9 +58,8 @@ void MCGenerator::generate() {
                 convertLabel(stmt);
                 break;
             default:
-                std::cerr << "Could not convert some TAC statement to machine "
-                "code at " << stmt.loc << std::endl;
-                exit(1);
+                debug.logger.error("Could not convert some TAC statement to "
+                "machine code", stmt.loc);
         }
     }
     machineCode.push_back(MCStatement(MC_MOVE, SIZE_QUAD, MCOperand(0),
@@ -84,8 +84,7 @@ MCOperand MCGenerator::createOperand(TACOperand op) {
             return MCOperand(assignRegister(op.value));
         default: break;
     }
-    std::cerr << "Could not convert TAC operand to MC operand." << std::endl;
-    exit(1);
+    debug.logger.error("Could not convert TAC operand to MC operand");
     return MCOperand();
 }
 
