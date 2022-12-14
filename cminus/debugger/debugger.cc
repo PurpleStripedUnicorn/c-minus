@@ -130,7 +130,8 @@ void Debugger::parser(std::ostream &os, const ParseNode *node, size_t depth)
 const {
     if (node == nullptr)
         return;
-    for (size_t i = 0; i < depth; i++)
+    os << node->loc << " ";
+    for (size_t i = node->loc.str().size(); i < depth + 3; i++)
         os << "   ";
     if (nodeTypeTable.find(node->getType()) == nodeTypeTable.end())
         os << "??";
