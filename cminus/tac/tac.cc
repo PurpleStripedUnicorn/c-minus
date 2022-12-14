@@ -41,7 +41,7 @@ void TACGenerator::visitIdentifier(IdentifierNode *node) {
     long long id = scopes.find(node->content);
     if (id == -1)
         debug.logger.error("The identifier \"" + node->content + "\" was not "
-        "declared in this scope");
+        "declared in this scope", node->loc);
     lastTmp = TACOperand(TACOP_VAR, id);
 }
 

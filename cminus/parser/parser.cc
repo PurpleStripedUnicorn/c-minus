@@ -48,7 +48,7 @@ bool Parser::accept(TokenType type) const {
 
 void Parser::expect(TokenType type) const {
     if (!accept(type))
-        debug.logger.error("Unexpected token");
+        debug.logger.error("Unexpected token", getLoc());
 }
 
 ParseNode *Parser::readProgram() {
