@@ -12,22 +12,25 @@
 const std::unordered_map<TokenType, std::string> tokenTable = {
     { TOK_END, "END" },
     { TOK_ERR, "ERR" },
+    { TOK_IF, "IF" },
+    { TOK_ELSE, "ELSE" },
+    { TOK_WHILE, "WHIlE" },
     { TOK_ID, "ID" },
+    { TOK_TYPENAME, "TYPENAME" },
+    { TOK_NUM, "NUM" },
     { TOK_COMMA, "," },
+    { TOK_SEMICOL, ";" },
     { TOK_LBRACE, "(" },
     { TOK_RBRACE, ")" },
     { TOK_LCBRACE, "{" },
     { TOK_RCBRACE, "}" },
-    { TOK_EQ, "=" },
+    { TOK_ASSIGN, "=" },
+    { TOK_EQ, "==" },
     { TOK_PLUS, "+" },
-    { TOK_MINUS, "-" },
     { TOK_TIMES, "*" },
+    { TOK_MINUS, "-" },
     { TOK_DIV, "/" },
     { TOK_MOD, "%" },
-    { TOK_SEMICOL, ";" },
-    { TOK_NUM, "NUM" },
-    { TOK_TYPENAME, "TYPE" },
-    { TOK_PRINT, "PRINT" },
 };
 
 const std::unordered_map<NodeType, std::string> nodeTypeTable = {
@@ -37,12 +40,17 @@ const std::unordered_map<NodeType, std::string> nodeTypeTable = {
     { NODE_SCOPE, "SCOPE" },
     { NODE_FUNC, "FUNC" },
     { NODE_NUM, "NUM" },
+    { NODE_IDENT, "ID" },
     { NODE_ADD, "+" },
     { NODE_SUB, "-" },
     { NODE_MUL, "*" },
     { NODE_DIV, "/" },
     { NODE_MOD, "%" },
     { NODE_PRINT, "PRINT" },
+    { NODE_IF, "IF" },
+    { NODE_WHILE, "WHILE" },
+    { NODE_DECL, "DECL" },
+    { NODE_ASSIGN, "=" },
 };
 
 const std::unordered_map<TACType, std::string> tacTypes = {
@@ -57,6 +65,12 @@ const std::unordered_map<TACType, std::string> tacTypes = {
     { TAC_MOV, "MOV" },
     { TAC_ERR, "LABEL" },
     { TAC_JUMP, "JUMP" },
+    { TAC_JE, "JE" },
+    { TAC_JNE, "JNE" },
+    { TAC_JL, "JL" },
+    { TAC_JLE, "JLE" },
+    { TAC_JG, "JG" },
+    { TAC_JGE, "JGE" },
 };
 
 Debugger::Debugger() : tree(nullptr), enabled(false) { }
