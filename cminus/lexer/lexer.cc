@@ -66,6 +66,7 @@ Token Lexer::getToken() {
         return getToken();
     }
     debug.logger.error("Unrecognized token", savedLoc);
+    return Token();
 }
 
 char Lexer::cur() const {
@@ -85,7 +86,7 @@ void Lexer::next() {
 Token Lexer::readID() {
     std::string ret;
     while (('a' <= cur() && cur() <= 'z') || ('A' <= cur() && cur() <= 'Z')
-    || cur() == '_')
+    || cur() == '_' || ('0' <= cur() && cur() <= '9'))
         ret += cur(), next();
     if (typenames.find(ret) != typenames.end())
         return Token(TOK_TYPENAME, ret, savedLoc);
