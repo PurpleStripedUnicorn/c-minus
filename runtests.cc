@@ -35,9 +35,9 @@ void print(int num) {
 #else
 std::string colored(std::string txt, std::string color) {
     if (color == "red")
-        return "\033[0;31m" + txt + "\033[0m";
+        return "\033[0;31;1m" + txt + "\033[0m";
     if (color == "green")
-        return "\033[0;32m" + txt + "\033[0m";
+        return "\033[0;32;1m" + txt + "\033[0m";
     if (color == "grey")
         return "\033[0;90m" + txt + "\033[0m";
     return txt;
