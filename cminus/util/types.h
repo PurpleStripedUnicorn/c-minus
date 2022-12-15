@@ -9,10 +9,15 @@
  */
 enum ReturnType {
     RT_VOID,
-    RT_INT,
-    RT_UINT,
+    RT_BOOL,
     RT_INT8,
-    RT_UINT8
+    RT_INT16,
+    RT_INT32,
+    RT_INT64,
+    RT_UINT8,
+    RT_UINT16,
+    RT_UINT32,
+    RT_UINT64,
 };
 
 /**

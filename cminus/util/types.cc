@@ -6,8 +6,9 @@
 
 const std::unordered_map<std::string, ReturnType> returnTypeMap = {
     { "void", RT_VOID },
-    { "int", RT_INT },
-    { "unsigned", RT_UINT },
+    { "bool", RT_BOOL },
+    { "int", RT_INT32 },
+    { "unsigned", RT_UINT32 },
     { "int8_t", RT_INT8 },
     { "uint8_t", RT_UINT8 },
 };

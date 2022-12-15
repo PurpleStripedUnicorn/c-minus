@@ -3,6 +3,7 @@
 #define FILE_PARSENODE
 
 #include "util/loc.h"
+#include "util/types.h"
 #include <vector>
 
 class ParseNode;
@@ -69,11 +70,14 @@ public:
 
     /**
      * Accept function for parse tree visitors
+     * @param visitor The parse tree visitor (derived class)
      */
     void accept(ParseTreeVisitor *visitor);
 
     // Location of the parse node
     Loc loc;
+    // Return type of this parse node
+    ReturnType rt;
 
 protected:
 
