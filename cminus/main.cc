@@ -11,25 +11,40 @@
 #include "tac/tac.h"
 
 int main(int argc, char *argv[]) {
+    bool debugMode = false;
     if (argc < 2) {
-        std::cerr << "No input filename given." << std::endl;
-        return 1;
+        std::cerr << "Usage: " << argv[0] << " [args] <filename>" <<
+        std::endl;
+        return 2;
+    }
+    for (int i = 1; i < argc; i++) {
+        if (std::string(argv[i]) == "-d")
+            debugMode = true;
     }
     // Read in the given text file
-    std::string filename = argv[1];
+    std::string filename = argv[argc - 1];
     std::ifstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Could not open file." << std::endl;
-        return 1;
+        std::cerr << "Could not open the give file \"" << filename << "\"" <<
+        std::endl;
+        return 2;
     }
     std::stringstream stream;
     stream << file.rdbuf();
     std::string txt = stream.str();
     // Start debugger
     Debugger debug;
-    std::ofstream lexerDebug("lexer.debug"), parserDebug("parser.debug"),
-    tacDebug("tac.debug");
-    debug.enable();
+    std::string lexerDebugFile, parserDebugFile, tacDebugFile;
+    lexerDebugFile = parserDebugFile = tacDebugFile = "/dev/null";
+    if (debugMode) {
+        lexerDebugFile = "lexer.debug";
+        parserDebugFile = "parser.debug";
+        tacDebugFile = "tac.debug";
+    }
+    std::ofstream lexerDebug(lexerDebugFile), parserDebug(parserDebugFile),
+    tacDebug(tacDebugFile);
+    if (debugMode)
+        debug.enable();
     // Lexer
     Lexer lexer(txt, debug);
     // Parser
