@@ -11,8 +11,6 @@ ccfiles = $(shell find cminus -name "*.cc")
 hfiles = $(ccfiles:.cc=.h)
 ofiles = $(subst cminus,build,$(ccfiles:.cc=.o))
 dfiles = $(ofiles:.o=.d)
-testfiles = $(shell find tests/*.cc)
-# testbuilds = $(subst .cc,,$(addprefix build/,$(testfiles)))
 
 ifeq ($(os),LINUX)
 	cc = g++
@@ -48,19 +46,19 @@ build/main: $(ofiles)
 -include $(dfiles)
 
 # Output C++ files
-build/%.o: cminus/%.cc Makefile
+build/%.o: cminus/%.cc Makefile $(buildfolders)
 	$(cc) $(cppargs) -MMD -MP -c $< -o $@
 
 # Testing program and useful tools
-build/runtests: runtests.cc build/tmp
+build/runtests: runtests.cc build/tmp $(buildfolders)
 	$(cc) $(cppargs) -o $@ $<
-build/combined_compile: combined_compile.cc build/tmp
+build/combined_compile: combined_compile.cc build/tmp $(buildfolders)
 	$(cc) $(cppargs) -o $@ $<
-build/tmp:
+build/tmp: $(buildfolders)
 	mkdir build/tmp
 
 # Create folders if neccessary
 build:
 	mkdir build
 $(buildfolders):
-	mkdir $@
+	mkdir -p $@
