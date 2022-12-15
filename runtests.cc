@@ -24,18 +24,9 @@ namespace fs = std::filesystem;
 
 const std::string prependC = R"!--!(
 #include "stdio.h"
-#include "stdint.h"
+#include <stdint.h>
 
-void print(int num) { printf("%d\n", num); }
-void print(unsigned int num) { printf("%u\n", num); }
-void print(int8_t num) { printf("%d\n", num); }
-void print(int16_t num) { printf("%d\n", num); }
-void print(int32_t num) { printf("%d\n", num); }
 void print(int64_t num) { printf("%d\n", num); }
-void print(uint8_t num) { printf("%u\n", num); }
-void print(uint16_t num) { printf("%u\n", num); }
-void print(uint32_t num) { printf("%u\n", num); }
-void print(uint64_t num) { printf("%u\n", num); }
 
 )!--!";
 
