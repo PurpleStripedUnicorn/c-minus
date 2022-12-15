@@ -51,13 +51,19 @@ void TACGenerator::visitPrint(PrintNode *node) {
 }
 
 void TACGenerator::visitDeclaration(DeclarationNode *node) {
-    // NOTE: Currently it is guaranteed that the children are identifier nodes
     for (ParseNode *child : node->childNodes) {
-        std::string name = static_cast<IdentifierNode *>(child)->content;
+        std::string name;
+        if (child->getType() == NODE_IDENT)
+            name = static_cast<IdentifierNode *>(child)->content;
+        else
+            name = static_cast<IdentifierNode *>(static_cast<AssignNode *>
+            (child)->leftChild)->content;
         if (scopes.find(name, false) != -1)
             debug.logger.error("The name \"" + name + "\" was already declared "
             "in this scope", node->loc);
         scopes.add(name, tempID++);
+        if (child->getType() == NODE_ASSIGN)
+            child->accept(this);
     }
 }
 

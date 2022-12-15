@@ -228,11 +228,13 @@ ParseNode *Parser::readDeclaration() {
     // TODO: implement more types
     DeclarationNode *node = new DeclarationNode(getLoc(), type);
     next();
-    // NOTE: currently it is guaranteed that the children are identifiers
     std::vector<ParseNode *> children;
-    children.push_back(readIdent());
+    children.push_back(readExpr());
     while (accept(TOK_COMMA))
-        next(), children.push_back(readIdent());
+        next(), children.push_back(readExpr());
+    for (const ParseNode *child : children)
+        if (child->getType() != NODE_IDENT && child->getType() != NODE_ASSIGN)
+            debug.logger.error("Invalid expression in declaration", child->loc);
     expect(TOK_SEMICOL), next();
     node->childNodes = children;
     return node;
