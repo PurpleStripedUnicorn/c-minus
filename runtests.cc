@@ -38,15 +38,18 @@ std::string colored(std::string txt, std::string color) {
         return "\033[0;31;1m" + txt + "\033[0m";
     if (color == "green")
         return "\033[0;32;1m" + txt + "\033[0m";
+    if (color == "cyan")
+        return "\033[0;36;1m" + txt + "\033[0m";
     if (color == "grey")
         return "\033[0;90m" + txt + "\033[0m";
     return txt;
 }
 #endif
 
-std::vector<std::string> getTestFiles() {
+std::vector<std::string> getTestFiles(const std::string &testfolder) {
     std::vector<std::string> out;
-    for (fs::recursive_directory_iterator it("tests/"), end; it != end; it++)
+    for (fs::recursive_directory_iterator it("tests/" + testfolder), end; it !=
+    end; it++)
         if (!fs::is_directory(it->path()))
             out.push_back(it->path().relative_path().string());
     std::sort(out.begin(), out.end());
@@ -77,12 +80,15 @@ std::string stripWhitespace(std::string inp) {
 int main(int argc, char *argv[]) {
     size_t pos = 0, neg = 0;
     bool fullout = false;
+    std::string testfolder = "";
     for (int i = 1; i < argc; i++) {
         if (std::string(argv[i]) == "-f")
             fullout = true;
+        else
+            testfolder = argv[i];
     }
     std::cout << std::endl;
-    for (const std::string &filename : getTestFiles()) {
+    for (const std::string &filename : getTestFiles(testfolder)) {
         system("print > build/tmp/test_ref.c");
         std::ofstream refSrcFile("build/tmp/test_ref.c");
         std::ifstream inpFile(filename);
@@ -129,10 +135,10 @@ int main(int argc, char *argv[]) {
         }
     }
     std::cout << std::endl << colored("=======================================",
-    neg == 0 ? "green" : "red") << std::endl;
+    neg == 0 ? (testfolder == "" ? "green" : "cyan") : "red") << std::endl;
     if (neg == 0)
         std::cout << colored("ALL " + std::to_string(pos) + " TEST(S) PASSED",
-        "green");
+        testfolder == "" ? "green" : "cyan");
     else
         std::cout << colored(std::to_string(pos) + " TEST(S) PASSED, " +
         std::to_string(neg) + " TEST(S) FAILED", "red");
