@@ -112,9 +112,20 @@ void TACGenerator::visitIf(IfNode *node) {
 }
 
 void TACGenerator::visitWhile(WhileNode *node) {
-    (void)node;
-    std::cerr << "Not implemented" << std::endl;
-    exit(1);
+    // .L1
+    //   je .L2, [left], 0
+    //   [middle]
+    //   jmp .L1
+    // .L2
+    TACOperand label1(TACOP_LABEL, labelID++);
+    TACOperand label2(TACOP_LABEL, labelID++);
+    TACOperand zero(TACOP_IMM, 0);
+    push(node->loc, TAC_LABEL, SIZE_EMPTY, label1);
+    node->leftChild->accept(this);
+    push(node->loc, TAC_JE, SIZE_DOUBLE, label2, lastTmp, zero);
+    node->rightChild->accept(this);
+    push(node->loc, TAC_JUMP, SIZE_EMPTY, label1);
+    push(node->loc, TAC_LABEL, SIZE_EMPTY, label2);
 }
 
 void TACGenerator::push(const TACStatement &stmt) {

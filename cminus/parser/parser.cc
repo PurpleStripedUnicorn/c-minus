@@ -84,6 +84,8 @@ ParseNode *Parser::readStmt() {
         return readPrint();
     if (accept(TOK_IF))
         return readIf();
+    if (accept(TOK_WHILE))
+        return readWhile();
     ParseNode *node = readExpr();
     expect(TOK_SEMICOL), next();
     return node;
