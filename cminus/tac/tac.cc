@@ -94,16 +94,20 @@ void TACGenerator::visitMul(MulNode *node) {
 }
 
 void TACGenerator::visitIf(IfNode *node) {
-    //   je .L1, [left], 0
+    //   je .L1, [left], 0      or      jle .L1, [left.first], [left.second]
     //   [middle]
     //   jmp .L2            (for if-else)
     // .L1
     //   [right]            (for if-else)
     // .L2                  (for if-else)
-    node->leftChild->accept(this);
     TACOperand label1(TACOP_LABEL, labelID++);
     TACOperand zero(TACOP_IMM, 0);
-    push(node->loc, TAC_JE, SIZE_DOUBLE, label1, lastTmp, zero);
+    if (isCompareOp(node->leftChild)) {
+        ifNotCondition(static_cast<BinaryNode *>(node->leftChild), label1);
+    } else {
+        node->leftChild->accept(this);
+        push(node->loc, TAC_JE, SIZE_DOUBLE, label1, lastTmp, zero);
+    }
     node->middleChild->accept(this);
     TACOperand label2;
     if (node->hasElse) {
@@ -119,7 +123,7 @@ void TACGenerator::visitIf(IfNode *node) {
 
 void TACGenerator::visitWhile(WhileNode *node) {
     // .L1
-    //   je .L2, [left], 0
+    //   je .L2, [left], 0      or      jle .L2, [left.first], [left.second]
     //   [middle]
     //   jmp .L1
     // .L2
@@ -127,11 +131,45 @@ void TACGenerator::visitWhile(WhileNode *node) {
     TACOperand label2(TACOP_LABEL, labelID++);
     TACOperand zero(TACOP_IMM, 0);
     push(node->loc, TAC_LABEL, SIZE_EMPTY, label1);
-    node->leftChild->accept(this);
-    push(node->loc, TAC_JE, SIZE_DOUBLE, label2, lastTmp, zero);
+    if (isCompareOp(node->leftChild)) {
+        ifNotCondition(static_cast<BinaryNode *>(node->leftChild), label2);
+    } else {
+        node->leftChild->accept(this);
+        push(node->loc, TAC_JE, SIZE_DOUBLE, label2, lastTmp, zero);
+    }
     node->rightChild->accept(this);
     push(node->loc, TAC_JUMP, SIZE_EMPTY, label1);
     push(node->loc, TAC_LABEL, SIZE_EMPTY, label2);
+}
+
+void TACGenerator::visitEq(EqNode *node) {
+    debug.logger.error("Comparisons outside if or while are not implemented",
+    node->loc);
+}
+
+void TACGenerator::visitNeq(NeqNode *node) {
+    debug.logger.error("Comparisons outside if or while are not implemented",
+    node->loc);
+}
+
+void TACGenerator::visitLt(LtNode *node) {
+    debug.logger.error("Comparisons outside if or while are not implemented",
+    node->loc);
+}
+
+void TACGenerator::visitLte(LteNode *node) {
+    debug.logger.error("Comparisons outside if or while are not implemented",
+    node->loc);
+}
+
+void TACGenerator::visitGt(GtNode *node) {
+    debug.logger.error("Comparisons outside if or while are not implemented",
+    node->loc);
+}
+
+void TACGenerator::visitGte(GteNode *node) {
+    debug.logger.error("Comparisons outside if or while are not implemented",
+    node->loc);
 }
 
 void TACGenerator::push(const TACStatement &stmt) {
@@ -156,4 +194,28 @@ void TACGenerator::visitBinaryStatement(TACType type, BinaryNode *node) {
     TACOperand dst = newTmp();
     push(node->loc, type, SIZE_DOUBLE, dst, src1, src2);
     lastTmp = dst;
+}
+
+bool TACGenerator::isCompareOp(const ParseNode *node) {
+    NodeType type = node->getType();
+    return type == NODE_EQ || type == NODE_NEQ || type == NODE_LT || type ==
+    NODE_LTE || type == NODE_GT || type == NODE_GTE;
+}
+
+void TACGenerator::ifNotCondition(BinaryNode *node, TACOperand label) {
+    TACType type;
+    switch (node->getType()) {
+        case NODE_EQ: type = TAC_JNE; break;
+        case NODE_NEQ: type = TAC_JE; break;
+        case NODE_LT: type = TAC_JGE; break;
+        case NODE_LTE: type = TAC_JG; break;
+        case NODE_GT: type = TAC_JLE; break;
+        case NODE_GTE: type = TAC_JL; break;
+        default: break;
+    }
+    node->leftChild->accept(this);
+    TACOperand src1 = lastTmp;
+    node->rightChild->accept(this);
+    TACOperand src2 = lastTmp;
+    push(node->loc, type, SIZE_DOUBLE, label, src1, src2);
 }

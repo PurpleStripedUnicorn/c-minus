@@ -131,6 +131,18 @@ private:
     ParseNode *readAssign();
 
     /**
+     * Parse an equality or non-equality
+     * @return The generated parse (sub)tree
+     */
+    ParseNode *readEquality();
+
+    /**
+     * Parse a relational operator (i.e. <, <=, >, >=)
+     * @return The generated parse (sub)tree
+     */
+    ParseNode *readCompare();
+
+    /**
      * Parse a sum (addition, subtraction)
      * @return The generated parse (sub)tree
      */

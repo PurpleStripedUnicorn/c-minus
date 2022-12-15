@@ -80,7 +80,7 @@ struct MCOperand {
  */
 struct MCStatement {
     MCStatement(MCType type, DataSize size = SIZE_EMPTY, MCOperand op1 =
-    MCOperand(), MCOperand op2 = MCOperand(), bool isSigned = false) :
+    MCOperand(), MCOperand op2 = MCOperand(), bool isSigned = true) :
     type(type), size(size), isSigned(isSigned), op1(op1), op2(op2) { }
     MCStatement(std::string direcName, std::string direcContent) :
     type(MC_DIREC), direcName(direcName), direcContent(direcContent) { }

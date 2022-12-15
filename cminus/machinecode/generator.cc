@@ -145,15 +145,15 @@ void MCGenerator::convertJump(const TACStatement &stmt) {
         case TAC_JGE: type = MC_JGE; break;
         default: break;
     }
-    MCOperand op1;
-    if (stmt.src2.type == TACOP_IMM) {
+    MCOperand op1 = createOperand(stmt.src2);
+    MCOperand op2;
+    if (stmt.src1.type == TACOP_IMM) {
         machineCode.push_back(MCStatement(MC_MOVE, SIZE_DOUBLE, createOperand(
-        stmt.src2), MCOperand(REG_RAX)));
-        op1 = MCOperand(REG_RAX);
+        stmt.src1), MCOperand(REG_RAX)));
+        op2 = MCOperand(REG_RAX);
     } else {
-        op1 = createOperand(stmt.src2);
+        op2 = createOperand(stmt.src1);
     }
-    MCOperand op2 = createOperand(stmt.src1);
     MCOperand label = createOperand(stmt.dst);
     machineCode.push_back(MCStatement(MC_CMP, SIZE_DOUBLE, op1, op2));
     machineCode.push_back(MCStatement(type, SIZE_DOUBLE, label));

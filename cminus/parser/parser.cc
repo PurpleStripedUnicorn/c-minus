@@ -146,7 +146,7 @@ ParseNode *Parser::readAssign() {
     // Right associative
     AssignNode *node = new AssignNode(getLoc());
     node->leftChild = nullptr, node->rightChild = nullptr;
-    ParseNode *leftNode = readSum();
+    ParseNode *leftNode = readEquality();
     if (!accept(TOK_ASSIGN)) {
         delete node;
         return leftNode;
@@ -158,6 +158,47 @@ ParseNode *Parser::readAssign() {
         "assignment", node->loc);
     node->rightChild = readAssign();
     return node;
+}
+
+ParseNode *Parser::readEquality() {
+    // Left associative
+    Loc loc = getLoc();
+    ParseNode *cur = readCompare();
+    while (accept(TOK_EQ) || accept(TOK_NEQ)) {
+        BinaryNode *newCur;
+        if (accept(TOK_EQ))
+            newCur = new EqNode(loc);
+        else
+            newCur = new NeqNode(loc);
+        next();
+        newCur->leftChild = cur;
+        newCur->rightChild = readCompare();
+        cur = newCur;
+    }
+    return cur;
+}
+
+ParseNode *Parser::readCompare() {
+    // Left associative
+    Loc loc = getLoc();
+    ParseNode *cur = readSum();
+    while (accept(TOK_LT) || accept(TOK_LTE) || accept(TOK_GT) ||
+    accept(TOK_GTE)) {
+        BinaryNode *newCur;
+        if (accept(TOK_LT))
+            newCur = new LtNode(loc);
+        else if (accept(TOK_LTE))
+            newCur = new LteNode(loc);
+        else if (accept(TOK_GT))
+            newCur = new GtNode(loc);
+        else
+            newCur = new GteNode(loc);
+        next();
+        newCur->leftChild = cur;
+        newCur->rightChild = readSum();
+        cur = newCur;
+    }
+    return cur;
 }
 
 ParseNode *Parser::readSum() {

@@ -41,6 +41,18 @@ void ParseTreeVisitor::visit(ParseNode *node) {
             visitIf(static_cast<IfNode *>(node)); break;
         case NODE_WHILE:
             visitWhile(static_cast<WhileNode *>(node)); break;
+        case NODE_EQ:
+            visitEq(static_cast<EqNode *>(node)); break;
+        case NODE_NEQ:
+            visitNeq(static_cast<NeqNode *>(node)); break;
+        case NODE_LT:
+            visitLt(static_cast<LtNode *>(node)); break;
+        case NODE_LTE:
+            visitLte(static_cast<LteNode *>(node)); break;
+        case NODE_GT:
+            visitGt(static_cast<GtNode *>(node)); break;
+        case NODE_GTE:
+            visitGte(static_cast<GteNode *>(node)); break;
     }
 }
 

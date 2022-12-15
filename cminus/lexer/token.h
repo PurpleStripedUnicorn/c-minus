@@ -24,11 +24,13 @@ enum TokenType {
     // Assignment
     TOK_ASSIGN,
     // Comparisons
-    TOK_EQ,
+    TOK_EQ, TOK_NEQ, TOK_LT, TOK_LTE, TOK_GT, TOK_GTE,
     // Arithmatic
     TOK_PLUS, TOK_TIMES, TOK_MINUS, TOK_DIV, TOK_MOD,
     // Print statement
     TOK_PRINT,
+    // Boolean operators
+    TOK_NOT,
 };
 
 /**

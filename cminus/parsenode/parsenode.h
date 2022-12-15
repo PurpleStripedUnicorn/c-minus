@@ -31,6 +31,8 @@ enum NodeType {
     NODE_DECL,
     // Assignment node
     NODE_ASSIGN,
+    // Comparisons
+    NODE_EQ, NODE_NEQ, NODE_LT, NODE_LTE, NODE_GT, NODE_GTE,
 };
 
 /**

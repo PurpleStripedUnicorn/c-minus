@@ -51,7 +51,6 @@ private:
     /**
      * Get a register for a TAC variable
      * @param var The TAC variable index
-     * @warning NOT IMPLEMENTED!
      */
     MCRegister assignRegister(long long var);
 

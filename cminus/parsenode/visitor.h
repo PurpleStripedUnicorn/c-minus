@@ -17,6 +17,12 @@ class SubNode;
 class MulNode;
 class IfNode;
 class WhileNode;
+class EqNode;
+class NeqNode;
+class LtNode;
+class LteNode;
+class GtNode;
+class GteNode;
 
 
 /**
@@ -71,6 +77,12 @@ public:
     virtual void visitMul(MulNode *node) = 0;
     virtual void visitIf(IfNode *node) = 0;
     virtual void visitWhile(WhileNode *node) = 0;
+    virtual void visitEq(EqNode *node) = 0;
+    virtual void visitNeq(NeqNode *node) = 0;
+    virtual void visitLt(LtNode *node) = 0;
+    virtual void visitLte(LteNode *node) = 0;
+    virtual void visitGt(GtNode *node) = 0;
+    virtual void visitGte(GteNode *node) = 0;
 
 };
 

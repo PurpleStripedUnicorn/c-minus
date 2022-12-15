@@ -14,10 +14,10 @@ const std::unordered_map<MCType, MCFormat> mcOpTable = {
     { MC_CMP, MCFormat("cmp", true) },
     { MC_JE, MCFormat("je") },
     { MC_JNE, MCFormat("jne") },
-    { MC_JL, MCFormat("jl", "jb") },
-    { MC_JLE, MCFormat("jle", "jbe") },
-    { MC_JG, MCFormat("jg", "ja") },
-    { MC_JGE, MCFormat("jge", "jae") },
+    { MC_JL, MCFormat("jl", "jb", false) },
+    { MC_JLE, MCFormat("jle", "jbe", false) },
+    { MC_JG, MCFormat("jg", "ja", false) },
+    { MC_JGE, MCFormat("jge", "jae", false) },
     { MC_JUMP, MCFormat("jmp") },
     { MC_PUSH, MCFormat("push", true) },
     { MC_POP, MCFormat("pop", true) },
@@ -68,8 +68,8 @@ std::string mcStatementString(const MCStatement &stmt) {
     }
     MCFormat opFormat = mcOpTable.find(stmt.type)->second;
     std::string opName = opFormat.name;
-    if (opFormat.hasSigned && stmt.isSigned)
-        opName = opFormat.signedName;
+    if (opFormat.hasSigned && !stmt.isSigned)
+        opName = opFormat.unsignedName;
     if (opFormat.hasSize) {
         switch (stmt.size) {
             case SIZE_EMPTY:

@@ -47,6 +47,12 @@ public:
     virtual void visitMul(MulNode *node) override;
     virtual void visitIf(IfNode *node) override;
     virtual void visitWhile(WhileNode *node) override;
+    virtual void visitEq(EqNode *node) override;
+    virtual void visitNeq(NeqNode *node) override;
+    virtual void visitLt(LtNode *node) override;
+    virtual void visitLte(LteNode *node) override;
+    virtual void visitGt(GtNode *node) override;
+    virtual void visitGte(GteNode *node) override;
 
 private:
 
@@ -72,6 +78,20 @@ private:
      * @param node The node to convert to TAC
      */
     void visitBinaryStatement(TACType type, BinaryNode *node);
+
+    /**
+     * Check if the given node type is a compare operation
+     * @param node The node to check for
+     * @return A boolean indicating if the node is a compare operation
+     */
+    static bool isCompareOp(const ParseNode *node);
+
+    /**
+     * Convert a "jump if not condition"
+     * @param node The comparison node
+     * @param label The label to jump to
+     */
+    void ifNotCondition(BinaryNode *node, TACOperand label);
 
     // Generated statements
     std::vector<TACStatement> tac;

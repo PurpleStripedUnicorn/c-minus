@@ -76,6 +76,13 @@ private:
      */
     Token readNum();
 
+    /**
+     * Read in a small token using maximal munch
+     * @return The token read
+     * @post position is updated
+     */
+    Token readSmallToken();
+
     // The text the compiler reads in from a file
     const std::string &txt;
     // Record the current position in the input text

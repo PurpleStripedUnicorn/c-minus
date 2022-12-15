@@ -121,4 +121,52 @@ public:
     WhileNode(Loc loc = Loc());
 };
 
+/**
+ * Equality comparison
+ */
+class EqNode : public BinaryNode {
+public:
+    EqNode(Loc loc = Loc());
+};
+
+/**
+ * Non-equality comparison
+ */
+class NeqNode : public BinaryNode {
+public:
+    NeqNode(Loc loc = Loc());
+};
+
+/**
+ * Less than comparison
+ */
+class LtNode : public BinaryNode {
+public:
+    LtNode(Loc loc = Loc());
+};
+
+/**
+ * Less than or equal comparison
+ */
+class LteNode : public BinaryNode {
+public:
+    LteNode(Loc loc = Loc());
+};
+
+/**
+ * Greater than comparison
+ */
+class GtNode : public BinaryNode {
+public:
+    GtNode(Loc loc = Loc());
+};
+
+/**
+ * Greater than or equal comparison
+ */
+class GteNode : public BinaryNode {
+public:
+    GteNode(Loc loc = Loc());
+};
+
 #endif

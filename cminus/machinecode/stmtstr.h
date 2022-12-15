@@ -20,10 +20,11 @@ struct MCStatement;
 struct MCFormat {
     MCFormat(std::string name, bool hasSize = false) : name(name),
     hasSigned(false), hasSize(hasSize) { }
-    MCFormat(std::string name, std::string signedName, bool hasSize = false) :
-    name(name), signedName(signedName), hasSigned(true), hasSize(hasSize) { }
+    MCFormat(std::string name, std::string unsignedName, bool hasSize) :
+    name(name), unsignedName(unsignedName), hasSigned(true), hasSize(hasSize)
+    { }
     std::string name;
-    std::string signedName;
+    std::string unsignedName;
     bool hasSigned;
     bool hasSize;
 };

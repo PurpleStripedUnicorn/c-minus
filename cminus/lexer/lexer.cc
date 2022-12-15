@@ -5,19 +5,28 @@
 #include <unordered_set>
 #include <iostream>
 
-std::unordered_map<char, TokenType> smallTokens = {
-    { '(', TOK_LBRACE },
-    { ')', TOK_RBRACE },
-    { '{', TOK_LCBRACE },
-    { '}', TOK_RCBRACE },
-    { ',', TOK_COMMA },
-    { ';', TOK_SEMICOL },
-    { '=', TOK_ASSIGN },
-    { '+', TOK_PLUS },
-    { '-', TOK_MINUS },
-    { '*', TOK_TIMES },
-    { '/', TOK_DIV },
-    { '%', TOK_MOD },
+// This map contains types of small and simple tokens
+// If a string is present in this map, then all of its prefixes should be too!
+std::unordered_map<std::string, TokenType> smallTokens = {
+    { "(", TOK_LBRACE },
+    { ")", TOK_RBRACE },
+    { "{", TOK_LCBRACE },
+    { "}", TOK_RCBRACE },
+    { ",", TOK_COMMA },
+    { ";", TOK_SEMICOL },
+    { "=", TOK_ASSIGN },
+    { "+", TOK_PLUS },
+    { "-", TOK_MINUS },
+    { "*", TOK_TIMES },
+    { "/", TOK_DIV },
+    { "%", TOK_MOD },
+    { "==", TOK_EQ },
+    { "!=", TOK_NEQ },
+    { "<", TOK_LT },
+    { "<=", TOK_LTE },
+    { ">", TOK_GT },
+    { ">=", TOK_GTE },
+    { "!", TOK_NOT },
 };
 
 std::unordered_set<std::string> typenames = {
@@ -51,11 +60,10 @@ Token Lexer::getToken() {
     savedLoc = loc;
     if (atEnd())
         return Token(TOK_END);
-    if (smallTokens.find(cur()) != smallTokens.end()) {
-        Token ret = Token(smallTokens.find(cur())->second, "", savedLoc);
-        next();
-        return ret;
-    }
+    std::string curStr;
+    curStr.push_back(cur());
+    if (smallTokens.find(curStr) != smallTokens.end())
+        return readSmallToken();
     if (('a' <= cur() && cur() <= 'z') || ('A' <= cur() && cur() <= 'Z')
     || cur() == '_')
         return readID();
@@ -106,4 +114,12 @@ Token Lexer::readNum() {
     while ('0' <= cur() && cur() <= '9')
         ret += cur(), next();
     return Token(TOK_NUM, ret, savedLoc);
+}
+
+Token Lexer::readSmallToken() {
+    std::string content;
+    content.push_back(cur()), next();
+    while (smallTokens.find(content + cur()) != smallTokens.end())
+        content.push_back(cur()), next();
+    return Token(smallTokens.find(content)->second, "", savedLoc);
 }

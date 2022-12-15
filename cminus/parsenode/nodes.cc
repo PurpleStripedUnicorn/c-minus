@@ -30,3 +30,15 @@ MulNode::MulNode(Loc loc) : BinaryNode(NODE_MUL, loc) { }
 IfNode::IfNode(Loc loc) : TernaryNode(NODE_IF, loc) { }
 
 WhileNode::WhileNode(Loc loc) : BinaryNode(NODE_WHILE, loc) { }
+
+EqNode::EqNode(Loc loc) : BinaryNode(NODE_EQ, loc) { }
+
+NeqNode::NeqNode(Loc loc) : BinaryNode(NODE_NEQ, loc) { }
+
+LtNode::LtNode(Loc loc) : BinaryNode(NODE_LT, loc) { }
+
+LteNode::LteNode(Loc loc) : BinaryNode(NODE_LTE, loc) { }
+
+GtNode::GtNode(Loc loc) : BinaryNode(NODE_GT, loc) { }
+
+GteNode::GteNode(Loc loc) : BinaryNode(NODE_GTE, loc) { }
