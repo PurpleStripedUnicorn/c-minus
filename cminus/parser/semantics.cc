@@ -1,5 +1,6 @@
 
 #include "debugger/debugger.h"
+#include "scope.h"
 #include "semantics.h"
 #include "parsenode/nodes.h"
 
@@ -14,8 +15,10 @@ void SemanticsVisitor::visitProgram(ProgramNode *node) {
 }
 
 void SemanticsVisitor::visitScope(ScopeNode *node) {
+    scopeManager.pushScope();
     for (ParseNode *child : node->childNodes)
         child->accept(this);
+    scopeManager.popScope();
     node->rt = RT_VOID;
 }
 
@@ -29,7 +32,7 @@ void SemanticsVisitor::visitNumber(NumberNode *node) {
 }
 
 void SemanticsVisitor::visitIdentifier(IdentifierNode *node) {
-    // TODO: make a symbol table
+    // TODO: implement
 }
 
 void SemanticsVisitor::visitPrint(PrintNode *node) {
@@ -38,8 +41,15 @@ void SemanticsVisitor::visitPrint(PrintNode *node) {
 }
 
 void SemanticsVisitor::visitDeclaration(DeclarationNode *node) {
-    for (ParseNode *child : node->childNodes)
+    for (ParseNode *child : node->childNodes) {
+        // A declaration can either have an identifier or an assignment behind
+        // it
+        if (child->getType() == NODE_IDENT) {
+            // TODO: implement
+            // scopeManager.push();
+        }
         child->accept(this);
+    }
     node->rt = RT_VOID;
 }
 

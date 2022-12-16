@@ -59,6 +59,9 @@ public:
 
 private:
 
+    // The debugger
+    Debugger &debug;
+
     // The list of defined symbols, the index in the list indicates the unique
     // ID that is assigned to this symbol
     std::vector<Symbol> symbols;

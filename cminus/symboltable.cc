@@ -2,7 +2,7 @@
 #include "debugger/debugger.h"
 #include "symboltable.h"
 
-SymbolTable::SymbolTable(Debugger &debug) { }
+SymbolTable::SymbolTable(Debugger &debug) : debug(debug) { }
 
 SymbolTable::~SymbolTable() { }
 

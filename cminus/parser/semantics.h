@@ -4,6 +4,10 @@
 
 #include "parsenode/nodes.h"
 #include "parsenode/visitor.h"
+#include "scope.h"
+#include "symboltable.h"
+#include <unordered_map>
+#include <vector>
 
 class Debugger;
 
@@ -49,6 +53,13 @@ private:
 
     // The debugger
     Debugger &debug;
+
+    // The symbol table
+    SymbolTable &symbolTable;
+
+    // The scope manager, to keep track of scoping of variables/symbols
+    // Has a stack that keeps track of scopes
+    ScopeManager scopeManager;
 
 };
 

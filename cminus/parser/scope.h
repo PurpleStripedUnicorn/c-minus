@@ -48,7 +48,7 @@ public:
      * @warning Does not check if the variable was already defined in the
      * current scope!
      */
-    void add(std::string name, long long tacName);
+    void push(std::string name, long long tacName);
 
 private:
 
