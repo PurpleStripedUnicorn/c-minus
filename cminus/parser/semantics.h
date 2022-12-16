@@ -1,6 +1,6 @@
 
-#ifndef FILE_TAC_TYPES
-#define FILE_TAC_TYPES
+#ifndef FILE_PARSER_SEMANTICS
+#define FILE_PARSER_SEMANTICS
 
 #include "parsenode/nodes.h"
 #include "parsenode/visitor.h"
@@ -10,7 +10,7 @@ class Debugger;
 /**
  * Class used to determine return types of parse nodes
  */
-class TypeVisitor : ParseTreeVisitor {
+class SemanticsVisitor : ParseTreeVisitor {
 
 public:
 
@@ -18,12 +18,12 @@ public:
      * Constructor
      * @param debug The debugger
      */
-    TypeVisitor();
+    SemanticsVisitor(Debugger &debug);
 
     /**
      * Destructor
      */
-    ~TypeVisitor();
+    ~SemanticsVisitor();
 
     virtual void visitProgram(ProgramNode *node) override;
     virtual void visitScope(ScopeNode *node) override;
