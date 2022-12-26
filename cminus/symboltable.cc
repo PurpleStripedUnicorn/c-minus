@@ -2,6 +2,9 @@
 #include "debugger/debugger.h"
 #include "symboltable.h"
 
+Symbol::Symbol(std::string name, ReturnType type, Loc defineLoc) : name(name),
+type(type), defineLoc(defineLoc) { }
+
 SymbolTable::SymbolTable(Debugger &debug) : debug(debug) { }
 
 SymbolTable::~SymbolTable() { }

@@ -57,6 +57,8 @@ public:
 class IdentifierNode : public BasicNode {
 public:
     IdentifierNode(std::string content, Loc loc = Loc());
+    // The unique ID of the variable that this identifier represents
+    long long id;
 };
 
 /**

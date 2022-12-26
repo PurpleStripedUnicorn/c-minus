@@ -4,7 +4,8 @@
 #include "semantics.h"
 #include "parsenode/nodes.h"
 
-SemanticsVisitor::SemanticsVisitor(Debugger &debug) : debug(debug) { }
+SemanticsVisitor::SemanticsVisitor(Debugger &debug, SymbolTable &symbolTable) :
+debug(debug), symbolTable(symbolTable) { }
 
 SemanticsVisitor::~SemanticsVisitor() { }
 
@@ -32,7 +33,12 @@ void SemanticsVisitor::visitNumber(NumberNode *node) {
 }
 
 void SemanticsVisitor::visitIdentifier(IdentifierNode *node) {
-    // TODO: implement
+    long long id = scopeManager.find(node->content);
+    if (id == -1)
+        debug.logger.error("Identifier \"" + node->content + "\" was not "
+        "declared in this scope.", node->loc);
+    node->rt = symbolTable[id].type;
+    node->id = id;
 }
 
 void SemanticsVisitor::visitPrint(PrintNode *node) {
@@ -44,10 +50,18 @@ void SemanticsVisitor::visitDeclaration(DeclarationNode *node) {
     for (ParseNode *child : node->childNodes) {
         // A declaration can either have an identifier or an assignment behind
         // it
-        if (child->getType() == NODE_IDENT) {
-            // TODO: implement
-            // scopeManager.push();
-        }
+        IdentifierNode *ident;
+        if (child->getType() == NODE_IDENT)
+            ident = static_cast<IdentifierNode *>(child);
+        if (child->getType() == NODE_ASSIGN)
+            ident = static_cast<IdentifierNode *>(static_cast<AssignNode *>(
+            child)->leftChild);
+        if (scopeManager.find(ident->content, false) != -1)
+            debug.logger.error("The identifier \"" + ident->content + "\" was "
+            "already declared in this scope", child->loc);
+        Symbol symbol(ident->content, node->declareType, node->loc);
+        size_t id = symbolTable.push(symbol);
+        scopeManager.push(ident->content, id);
         child->accept(this);
     }
     node->rt = RT_VOID;
@@ -80,7 +94,8 @@ void SemanticsVisitor::visitMul(MulNode *node) {
 void SemanticsVisitor::visitIf(IfNode *node) {
     node->leftChild->accept(this);
     node->middleChild->accept(this);
-    node->rightChild->accept(this);
+    if (node->rightChild != nullptr)
+        node->rightChild->accept(this);
     node->rt = RT_VOID;
 }
 

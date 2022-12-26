@@ -263,9 +263,9 @@ ParseNode *Parser::readDeclaration() {
     if (tname == "void")
         debug.logger.error("Cannot create variables of type \"void\"",
         getLoc());
-    ReturnType type = RT_INT;
+    ReturnType type = RT_INT32;
     if (tname == "int")
-        type = RT_INT;
+        type = RT_INT32;
     // TODO: implement more types
     DeclarationNode *node = new DeclarationNode(getLoc(), type);
     next();

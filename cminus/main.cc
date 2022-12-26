@@ -8,6 +8,7 @@
 #include "machinecode/generator.h"
 #include "parsenode/parsenode.h"
 #include "parser/parser.h"
+#include "parser/semantics/semantics.h"
 #include "tac/tac.h"
 
 int main(int argc, char *argv[]) {
@@ -45,6 +46,8 @@ int main(int argc, char *argv[]) {
     tacDebug(tacDebugFile);
     if (debugMode)
         debug.enable();
+    // Create a global symbol table
+    SymbolTable symbolTable(debug);
     // Lexer
     Lexer lexer(txt, debug);
     // Parser
@@ -52,8 +55,11 @@ int main(int argc, char *argv[]) {
     parser.parse();
     debug.lexer(lexerDebug);
     debug.parser(parserDebug);
+    // Semantical analysis
+    SemanticsVisitor semantics(debug, symbolTable);
+    parser.getTree()->accept(&semantics);
     // TAC generation
-    TACGenerator tac(debug);
+    TACGenerator tac(debug, symbolTable);
     parser.getTree()->accept(&tac);
     debug.tac(tacDebug);
     // Machine code generation

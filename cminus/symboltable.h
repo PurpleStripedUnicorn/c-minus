@@ -10,9 +10,11 @@
 class Debugger;
 
 /**
- * A symbol in the symbol table, containing return type and definition location
+ * A symbol in the symbol table, containing name, return type and definition
+ * location
  */
 struct Symbol {
+    Symbol(std::string name, ReturnType type, Loc defineLoc = Loc());
     std::string name;
     ReturnType type;
     Loc defineLoc;

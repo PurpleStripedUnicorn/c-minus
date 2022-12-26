@@ -14,15 +14,16 @@ class Debugger;
 /**
  * Class used to determine return types of parse nodes
  */
-class SemanticsVisitor : ParseTreeVisitor {
+class SemanticsVisitor : public ParseTreeVisitor {
 
 public:
 
     /**
      * Constructor
      * @param debug The debugger
+     * @param symbolTable The main symbol table
      */
-    SemanticsVisitor(Debugger &debug);
+    SemanticsVisitor(Debugger &debug, SymbolTable &symbolTable);
 
     /**
      * Destructor

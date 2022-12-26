@@ -27,6 +27,6 @@ long long ScopeManager::find(std::string name, bool fullDepth) const {
     return -1;
 }
 
-void ScopeManager::add(std::string name, long long tacName) {
+void ScopeManager::push(std::string name, long long tacName) {
     scopeStack.back()[name] = tacName;
 }

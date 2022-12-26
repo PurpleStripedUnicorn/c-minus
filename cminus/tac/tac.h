@@ -4,11 +4,11 @@
 
 #include "parsenode/base.h"
 #include "parsenode/visitor.h"
-#include "scope.h"
 #include "stmt.h"
 #include <vector>
 
 class Debugger;
+class SymbolTable;
 
 /**
  * Generator for Three-Address Code, which uses the visitor pattern
@@ -20,8 +20,9 @@ public:
     /**
      * Constructor
      * @param debug The debugger
+     * @param symbolTable The main symbol table
      */
-    TACGenerator(Debugger &debug);
+    TACGenerator(Debugger &debug, SymbolTable &symbolTable);
 
     /**
      * Destructor
@@ -103,8 +104,8 @@ private:
     long long labelID;
     // Last temporary value that was written to (is a TAC operand)
     TACOperand lastTmp;
-    // Scope manager
-    ScopeManager scopes;
+    // The main symbol table
+    SymbolTable &symbolTable;
 
 };
 

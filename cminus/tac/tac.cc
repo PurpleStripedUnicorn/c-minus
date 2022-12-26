@@ -4,11 +4,13 @@
 #include "parsenode/nodes.h"
 #include "parsenode/parsenode.h"
 #include "stmt.h"
+#include "symboltable.h"
 #include "tac.h"
 #include <iostream>
 
-TACGenerator::TACGenerator(Debugger &debug) : debug(debug), tempID(0),
-labelID(0) { }
+TACGenerator::TACGenerator(Debugger &debug, SymbolTable &symbolTable) :
+debug(debug), tempID(symbolTable.size()), labelID(0), symbolTable(symbolTable)
+{ }
 
 TACGenerator::~TACGenerator() { }
 
@@ -22,10 +24,8 @@ void TACGenerator::visitProgram(ProgramNode *node) {
 }
 
 void TACGenerator::visitScope(ScopeNode *node) {
-    scopes.pushScope();
     for (ParseNode *child : node->children())
         child->accept(this);
-    scopes.popScope();
 }
 
 void TACGenerator::visitFunc(FuncNode *node) {
@@ -38,11 +38,7 @@ void TACGenerator::visitNumber(NumberNode *node) {
 }
 
 void TACGenerator::visitIdentifier(IdentifierNode *node) {
-    long long id = scopes.find(node->content);
-    if (id == -1)
-        debug.logger.error("The identifier \"" + node->content + "\" was not "
-        "declared in this scope", node->loc);
-    lastTmp = TACOperand(TACOP_VAR, id);
+    lastTmp = TACOperand(TACOP_VAR, node->id);
 }
 
 void TACGenerator::visitPrint(PrintNode *node) {
@@ -51,29 +47,12 @@ void TACGenerator::visitPrint(PrintNode *node) {
 }
 
 void TACGenerator::visitDeclaration(DeclarationNode *node) {
-    for (ParseNode *child : node->childNodes) {
-        std::string name;
-        if (child->getType() == NODE_IDENT)
-            name = static_cast<IdentifierNode *>(child)->content;
-        else
-            name = static_cast<IdentifierNode *>(static_cast<AssignNode *>
-            (child)->leftChild)->content;
-        if (scopes.find(name, false) != -1)
-            debug.logger.error("The name \"" + name + "\" was already declared "
-            "in this scope", node->loc);
-        scopes.add(name, tempID++);
-        if (child->getType() == NODE_ASSIGN)
-            child->accept(this);
-    }
+    for (ParseNode *child : node->childNodes)
+        child->accept(this);
 }
 
 void TACGenerator::visitAssign(AssignNode *node) {
-    std::string name = static_cast<IdentifierNode *>(node->leftChild)->content;
-    long long id = scopes.find(name);
-    if (id == -1) {
-        debug.logger.error("The name \"" + name + "\" was not declared in this "
-        "scope", node->loc);
-    }
+    long long id = static_cast<IdentifierNode *>(node->leftChild)->id;
     node->rightChild->accept(this);
     TACOperand dst(TACOP_VAR, id);
     TACOperand src = lastTmp;

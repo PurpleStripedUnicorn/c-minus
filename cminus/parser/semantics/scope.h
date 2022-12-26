@@ -1,6 +1,6 @@
 
-#ifndef FILE_TAC_SCOPE
-#define FILE_TAC_SCOPE
+#ifndef FILE_SCOPE
+#define FILE_SCOPE
 
 #include <vector>
 #include <string>
